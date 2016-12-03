@@ -1,8 +1,8 @@
 var j = jQuery.noConflict();
 var defaultPagePath='app/pages/';
 var headerMsg = "Expenzing";
-var urlPath = 'http://1.255.255.18:8117/TnEV1_0AWeb/WebService/Login/';
-var WebServicePath = 'http://1.255.255.198:8099/NexstepWebService/mobileLinkResolver.service';
+var urlPath = 'http://1.255.255.36:8099/TnEV1_0AWeb/WebService/Login/';
+var WebServicePath = 'http://1.255.255.198:8089/NexstepWebService/mobileLinkResolver.service';
 var clickedFlagCar = false;
 var clickedFlagTicket = false;
 var clickedFlagHotel = false;

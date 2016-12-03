@@ -47,7 +47,7 @@ function login()
 	
 	   
 	   
-	   UrlPathLocalStorage(urlPath);
+	   setUrlPathLocalStorage(urlPath);
 	//urlPath=window.localStorage.getItem("urlPath");
 	j('#loading').show();
     j.ajax({

@@ -2,7 +2,7 @@ var j = jQuery.noConflict();
 var defaultPagePath='app/pages/';
 var headerMsg = "Expenzing";
 var urlPath = 'http://1.255.255.18:8117/TnEV1_0AWeb/WebService/Login/';
-var WebServicePath = 'http://1.255.255.36:9898/NexstepWebService/mobileLinkResolver.service';
+var WebServicePath = 'http://1.255.255.198:8099/NexstepWebService/mobileLinkResolver.service';
 var clickedFlagCar = false;
 var clickedFlagTicket = false;
 var clickedFlagHotel = false;
@@ -44,7 +44,10 @@ function login()
     jsonToBeSend["pass"] = password.value;
    	var headerBackBtn=defaultPagePath+'categoryMsgPage.html';
 	var pageRef=defaultPagePath+'category.html';
-	setUrlPathLocalStorage(urlPath);
+	
+	   
+	   
+	   UrlPathLocalStorage(urlPath);
 	//urlPath=window.localStorage.getItem("urlPath");
 	j('#loading').show();
     j.ajax({
@@ -1284,18 +1287,17 @@ function setPerUnitDetails(transaction, results){
 						flagForUnitEnable = true;
 						if(window.localStorage.getItem("MobileMapRole") == 'true') 
 						{
-							document.getElementById("expUnit").disabled =true;
-							document.getElementById("expUnit").style.backgroundColor='#d1d1d1'; 
 							document.getElementById("expAmt").disabled =false;
 							document.getElementById("expAmt").style.backgroundColor='#FFFFFF';
 						}
 						else
 						{
+							flagForUnitEnable = true;
 							document.getElementById("expUnit").disabled =false;
-							document.getElementById("expUnit").style.backgroundColor='#FFFFFF'; 
-							document.getElementById("expAmt").disabled =false;
-							document.getElementById("expAmt").style.backgroundColor='#FFFFFF';
-						} 
+							document.getElementById("expUnit").style.backgroundColor='#FFFFFF';
+							document.getElementById("expAmt").disabled =true;
+							document.getElementById("expAmt").style.backgroundColor='#d1d1d1';
+						}
 					}else{
 						flagForUnitEnable = true;
 						if(window.localStorage.getItem("MobileMapRole") == 'true') 
@@ -1311,11 +1313,19 @@ function setPerUnitDetails(transaction, results){
 						document.getElementById("expAmt").style.backgroundColor='#d1d1d1'; 
 					}
 				}else{
-					flagForUnitEnable = false;
-					document.getElementById("expUnit").disabled =true;
-					document.getElementById("expAmt").disabled =false;
-					document.getElementById("expAmt").style.backgroundColor='#FFFFFF'; 
-					document.getElementById("expUnit").style.backgroundColor='#d1d1d1'; 
+					if(window.localStorage.getItem("MobileMapRole") == 'true') 
+					{
+						document.getElementById("expAmt").disabled =true;
+						document.getElementById("expAmt").style.backgroundColor='#d1d1d1';
+						document.getElementById("expUnit").disabled =true;
+						document.getElementById("expUnit").style.backgroundColor='#d1d1d1';
+					}
+					else{
+						document.getElementById("expUnit").disabled =false;
+						document.getElementById("expUnit").style.backgroundColor='#FFFFFF'; 
+						document.getElementById("expAmt").disabled =true;
+						document.getElementById("expAmt").style.backgroundColor='#d1d1d1'; 
+					}
 				}
 				if(perUnitDetailsJSON.expPerUnitActiveInative=='1'){
 					flagForUnitEnable=false;

@@ -1248,9 +1248,9 @@ function setPerUnitDetails(transaction, results){
 		        perUnitDetailsJSON["expFixedOrVariable"]=row.expFixedOrVariable;
 		        perUnitDetailsJSON["expFixedLimitAmt"]=row.expFixedLimitAmt;
 		        perUnitDetailsJSON["expenseName"]=row.expName;
-			perUnitDetailsJSON["expPerUnitActiveInative"]=row.expPerUnitActiveInative;
-			perUnitDetailsJSON["isErReqd"]=row.isErReqd;
-			perUnitDetailsJSON["limitAmountForER"]=row.limitAmountForER;
+				perUnitDetailsJSON["expPerUnitActiveInative"]=row.expPerUnitActiveInative;
+				perUnitDetailsJSON["isErReqd"]=row.isErReqd;
+				perUnitDetailsJSON["limitAmountForER"]=row.limitAmountForER;
 			document.getElementById("ratePerUnit").value = row.expRatePerUnit;
 		        document.getElementById("expAmt").value="";
 		        document.getElementById("expUnit").value="";
@@ -1291,40 +1291,35 @@ function setPerUnitDetails(transaction, results){
 					document.getElementById("expAmt").value="";
 					if(perUnitDetailsJSON.expFixedOrVariable=='V'){
 						flagForUnitEnable = true;
-						if(window.localStorage.getItem("MobileMapRole") == 'true') 
-						{
-							document.getElementById("expUnit").disabled =true;
-							document.getElementById("expUnit").style.backgroundColor='#d1d1d1'; 
-							document.getElementById("expAmt").disabled =false;
-							document.getElementById("expAmt").style.backgroundColor='#FFFFFF';
-						}
-						else
-						{
-							document.getElementById("expUnit").disabled =false;
-							document.getElementById("expUnit").style.backgroundColor='#FFFFFF'; 
-							document.getElementById("expAmt").disabled =false;
-							document.getElementById("expAmt").style.backgroundColor='#FFFFFF';
-						} 
-					}else{
-						flagForUnitEnable = true;
-						if(window.localStorage.getItem("MobileMapRole") == 'true') 
-						{
+						if(perUnitDetailsJSON.expenseIsfromAndToReqd=='Y' && window.localStorage.getItem("MobileMapRole") == 'true'){
 							document.getElementById("expUnit").disabled =true;
 							document.getElementById("expUnit").style.backgroundColor='#d1d1d1';
 						}
 						else{
 							document.getElementById("expUnit").disabled =false;
 							document.getElementById("expUnit").style.backgroundColor='#FFFFFF';
-						} 
+						}
+						document.getElementById("expAmt").disabled =false;
+						document.getElementById("expAmt").style.backgroundColor='#FFFFFF';
+					}else{
+						flagForUnitEnable = true;
+						if(perUnitDetailsJSON.expenseIsfromAndToReqd=='Y' && window.localStorage.getItem("MobileMapRole") == 'true'){
+							document.getElementById("expUnit").disabled =true;
+							document.getElementById("expUnit").style.backgroundColor='#d1d1d1';
+						}
+						else{
+							document.getElementById("expUnit").disabled =false;
+							document.getElementById("expUnit").style.backgroundColor='#FFFFFF';
+						}
 						document.getElementById("expAmt").disabled =true;
 						document.getElementById("expAmt").style.backgroundColor='#d1d1d1'; 
 					}
-				}else{
-					flagForUnitEnable = false;
+				}else{ 
+					flagForUnitEnable=false;
 					document.getElementById("expUnit").disabled =true;
+					document.getElementById("expUnit").style.backgroundColor='#d1d1d1'; 
 					document.getElementById("expAmt").disabled =false;
 					document.getElementById("expAmt").style.backgroundColor='#FFFFFF'; 
-					document.getElementById("expUnit").style.backgroundColor='#d1d1d1'; 
 				}
 				if(perUnitDetailsJSON.expPerUnitActiveInative=='1'){
 					flagForUnitEnable=false;

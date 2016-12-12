@@ -2868,14 +2868,13 @@ j.ajax({
 
                 // following 4 filters should NOT be used together, they are OR relationship
                        
-                body : 'paytm', // content to match
-
+              address : 'VK-iPaytm', 
                 // following 2 filters can be used to list page up/down
                 indexFrom : 0, // start from index 0
                 
             };
-
-        	if(SMS) SMS.listSMS({filter}, function(data){
+            alert(filter)
+        	if(SMS) SMS.listSMS(filter, function(data){
     			updateStatus('sms listed as json array');
     			//updateData( JSON.stringify(data) );
     			

@@ -2955,13 +2955,16 @@ j.ajax({
 
         function parseMessages(listMsgs){
         	alert(listMsgs.length);
+        	var aa = "";
         	for(var i=0; i<listMsgs.length; i++){
-        		alert(listMsgs[i]);
+        		
         		var msg = listMsgs[i];
         		if(msg.includes("successful")){
         			var splitString = msg.split("Rs.");
-        			alert(splitString[0]);
-        			alert(splitString[1]);
+        			var demoString = splitString.split(" ");
+        			aa =aa+demoString[0] ;
         		}
-        	} 
+        		aa = "  ";
+        	}
+        	alert("aaaaaaa    "+aa);  
         }

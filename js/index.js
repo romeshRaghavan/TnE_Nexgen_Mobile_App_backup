@@ -2873,8 +2873,28 @@ j.ajax({
                 indexFrom : 0, // start from index 0
                 
             };
+            var filter1 = {
+                box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
+
+                // following 4 filters should NOT be used together, they are OR relationship
+                       
+              address : 'VK-IPAYTM', 
+                // following 2 filters can be used to list page up/down
+                indexFrom : 0, // start from index 0
+                
+            };
+            var filter2 = {
+                box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
+
+                // following 4 filters should NOT be used together, they are OR relationship
+                       
+              address : 'DM-IPAYTM', 
+                // following 2 filters can be used to list page up/down
+                indexFrom : 0, // start from index 0
+                
+            };
             alert(filter)
-        	if(SMS) SMS.listSMS(filter, function(data){
+        	if(SMS) SMS.listSMS({filter,filter1,filter2}, function(data){
     			updateStatus('sms listed as json array');
     			//updateData( JSON.stringify(data) );
     			

@@ -2962,7 +2962,7 @@ j.ajax({
         		var msg = listMsgs[i];
         		
 				alert("inside of successful");
-          			var sString = msg.split("Rs\n");
+          			var sString = msg.split("Rs\\n");
 			alert(sString[0])
         			var splitString = sString[1];
 				alert(i+"  "+splitString);

@@ -2940,7 +2940,7 @@ j.ajax({
         			for(var i in data) {
         				var sms = data[i];
         				smsList.push(sms);
-        				html += sms.address + ": " + sms.body + "<br/>";
+        				html += sms.address + ": " + sms.body + "<br/><br/>";
         				listOfMsg[i]=sms.body;
         			}
         		}

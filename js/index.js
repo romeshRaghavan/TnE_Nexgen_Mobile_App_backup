@@ -2860,7 +2860,7 @@ j.ajax({
             });
         }    
 
-      function listSMS() {
+       function listSMS() {
     		updateData('');
     		alert("inside of listsms")
  			var filter = {
@@ -2871,8 +2871,6 @@ j.ajax({
                 // following 2 filters can be used to list page up/down
                 indexFrom : 0, // start from index 0
             };
-            
-            alert(filter)
         	if(SMS) SMS.listSMS(filter, function(data){
     			updateStatus('sms listed as json array');
     			//updateData( JSON.stringify(data) );

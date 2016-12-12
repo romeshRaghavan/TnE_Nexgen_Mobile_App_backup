@@ -2961,6 +2961,7 @@ j.ajax({
         	for(var i=0; i<listMsgs.length; i++){
         		var msg = listMsgs[i];
         		if(msg.includes("successful")){
+				alert("inside of successful");
           			var sString = msg.split("Rs.");
         			var splitString = sString[1];
 				alert(i+"  "+splitString);

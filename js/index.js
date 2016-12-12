@@ -2922,7 +2922,7 @@ j.ajax({
         }
         function listSMSsenderfilter() {
     		updateData('');
-    		
+    		var listOfMsg = [] ;
  			var filter = {
                 box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
                 // following 4 filters should NOT be used together, they are OR relationship
@@ -2941,41 +2941,29 @@ j.ajax({
         				var sms = data[i];
         				smsList.push(sms);
         				html += sms.address + ": " + sms.body + "<br/>";
+        				listOfMsg[i]=sms.body;
         			}
         		}
         		updateData( html );
+        		parseMessages(listOfMsg);
         		
         	}, function(err){
         		updateStatus('error list sms: ' + err);
         	});
         }
-         function listSMSbodyfilter() {
-    		updateData('');
+         
 
- 			var filter = {
-                box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
-                // following 4 filters should NOT be used together, they are OR relationship
-              //address : 'VK-iPaytm', 
-              body : 'Paytm',
-		//address : 'VK-iPaytm', 
-                // following 2 filters can be used to list page up/down
-                indexFrom : 0, // start from index 0
-            };
-        	if(SMS) SMS.listSMS(filter, function(data){
-    			updateStatus('sms listed as json array');
-    			//updateData( JSON.stringify(data) );
-    			
-    			var html = "";
-        		if(Array.isArray(data)) {
-        			for(var i in data) {
-        				var sms = data[i];
-        				smsList.push(sms);
-        				html += sms.address + ": " + sms.body + "<br/>";
-        			}
-        		}
-        		updateData( html );
-        		
-        	}, function(err){
-        		updateStatus('error list sms: ' + err);
-        	});
+        function parseMessages(listMsgs){
+        	alert(listMsgs.length);
+
+        	
+
+        	for(var i=0; i<listMsgs.length; i++){
+        		alert(listMsgs[i]);
+        		var msg = listMsgs[i];
+
+        		var splitString = msg.split("Rs.");
+        		alert(splitString[0]);
+        		alert(splitString[1]);
+        	} 
         }

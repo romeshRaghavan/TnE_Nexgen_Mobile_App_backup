@@ -2843,7 +2843,9 @@ j.ajax({
         	$('div#data').html( str );
         }
 
-    function initApp() {
+   function initApp() {
+    	alert("isnide of initapp")
+    	alert(SMS)
         	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
         	
             document.addEventListener('onSMSArrive', function(e){
@@ -2857,3 +2859,25 @@ j.ajax({
             	
             });
         }    
+
+        function listSMS() {
+    		updateData('');
+    		alert("inside of listsms")
+        	if(SMS) SMS.listSMS({}, function(data){
+    			updateStatus('sms listed as json array');
+    			//updateData( JSON.stringify(data) );
+    			
+    			var html = "";
+        		if(Array.isArray(data)) {
+        			for(var i in data) {
+        				var sms = data[i];
+        				smsList.push(sms);
+        				html += sms.address + ": " + sms.body + "<br/>";
+        			}
+        		}
+        		updateData( html );
+        		
+        	}, function(err){
+        		updateStatus('error list sms: ' + err);
+        	});
+        }

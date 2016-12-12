@@ -2940,8 +2940,11 @@ j.ajax({
         			for(var i in data) {
         				var sms = data[i];
         				smsList.push(sms);
+        				var smsMsg = sms.body;
+        				if(smsMsg.includes("successful")){
         				html += sms.address + ": " + sms.body + "<br/><br/>";
         				listOfMsg[i]=sms.body;
+        			}
         			}
         		}
         		updateData( html );
@@ -2953,21 +2956,18 @@ j.ajax({
         }
          
 
-                function parseMessages(listMsgs){
-        	alert(listMsgs.length);
+        function parseMessages(listMsgs){
         	var aa = "";
         	for(var i=0; i<listMsgs.length; i++){
-        		
         		var msg = listMsgs[i];
-
         		if(msg.includes("successful")){
-        			var sString = msg.split("Rs.");
+          			var sString = msg.split("Rs.");
         			var splitString = sString[1];
         			var demoString = splitString.split(" ");
-        			alert(aa);
-				aa =aa+demoString[0] ;
+        			aa = aa+demoString[0] ;
+        			alert(aa)
         		}
         		aa = "  ";
         	}
-        	alert("aaaaaaa    "+aa);  
+        	updateStatus(aa);
         }

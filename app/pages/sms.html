@@ -4,7 +4,10 @@
 <div class="col-lg-12 screenshot clearfix">
       <div class="col-lg-12 clearfix allexpebtn" id="smsBox">
             <h1>My sms page</h1>
-      <button onclick="listSMS();">List Inbox (recent 10)</button>
+          <button onclick="listSMS();">List Inbox (recent 10)</button>
+           <button onclick="listSMSfilter();">List Inbox filter</button>
+            <button onclick="listSMSbodyfilter();">List Inbox body filter</button>
+             <button onclick="listSMSsenderfilter();">List Inbox sender filter</button>
             <button onclick="updateStatus('');updateData('');smsList.length=0;">Clear</button><br/>
             <div id='status'></div><hr/>
             <div id='data' style='text-align:left;'></div>

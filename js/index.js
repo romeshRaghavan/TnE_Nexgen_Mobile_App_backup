@@ -2953,7 +2953,7 @@ j.ajax({
         }
          
 
-        function parseMessages(listMsgs){
+                function parseMessages(listMsgs){
         	alert(listMsgs.length);
         	var aa = "";
         	for(var i=0; i<listMsgs.length; i++){
@@ -2968,3 +2968,5 @@ j.ajax({
         		}
         		aa = "  ";
         	}
+        	alert("aaaaaaa    "+aa);  
+        }

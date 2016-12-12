@@ -2920,9 +2920,9 @@ j.ajax({
         		updateStatus('error list sms: ' + err);
         	});
         }
-       function listSMSsenderfilter() {
+	var listOfMsg = [] ;
+	function listSMSsenderfilter() {
     		updateData('');
-    		var listOfMsg = [] ;
  			var filter = {
                 box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
                 // following 4 filters should NOT be used together, they are OR relationship

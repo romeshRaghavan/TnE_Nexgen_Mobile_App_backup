@@ -2959,13 +2959,12 @@ j.ajax({
         	for(var i=0; i<listMsgs.length; i++){
         		
         		var msg = listMsgs[i];
-			alert(msg)
+        		alert(msg)
         		if(msg.includes("successful")){
-        			var splitString = msg.split("Rs.");
+        			var sString = msg.split("Rs.");
+        			var splitString = sString[1];
         			var demoString = splitString.split(" ");
         			aa =aa+demoString[0] ;
         		}
         		aa = "  ";
         	}
-        	alert("aaaaaaa    "+aa);  
-        }

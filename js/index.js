@@ -2920,7 +2920,7 @@ j.ajax({
         		updateStatus('error list sms: ' + err);
         	});
         }
-        function listSMSsenderfilter() {
+       function listSMSsenderfilter() {
     		updateData('');
     		var listOfMsg = [] ;
  			var filter = {
@@ -2955,15 +2955,13 @@ j.ajax({
 
         function parseMessages(listMsgs){
         	alert(listMsgs.length);
-
-        	
-
         	for(var i=0; i<listMsgs.length; i++){
         		alert(listMsgs[i]);
         		var msg = listMsgs[i];
-
-        		var splitString = msg.split("Rs.");
-        		alert(splitString[0]);
-        		alert(splitString[1]);
+        		if(msg.includes("successful")){
+        			var splitString = msg.split("Rs.");
+        			alert(splitString[0]);
+        			alert(splitString[1]);
+        		}
         	} 
         }

@@ -2959,6 +2959,7 @@ j.ajax({
         	for(var i=0; i<listMsgs.length; i++){
         		
         		var msg = listMsgs[i];
+			alert(msg)
         		if(msg.includes("successful")){
         			var splitString = msg.split("Rs.");
         			var demoString = splitString.split(" ");

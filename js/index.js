@@ -2963,6 +2963,7 @@ j.ajax({
         		if(msg.includes("successful")){
           			var sString = msg.split("Rs.");
         			var splitString = sString[1];
+				alert(i+"  "+splitString);
         			var demoString = splitString.split(" ");
         			aa = aa+demoString[0] ;
         			alert(aa)

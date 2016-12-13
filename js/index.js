@@ -3003,14 +3003,14 @@ function fetchMessages(smsBodyString) {
 
 	var result = smsBodyString.split("$");
 			  alert("1")
-	for (var i = 0; i < result.length; i++) {
+	for (var i = 0; i < result.length-1; i++) {
 				
 		var row = result[i];
 			 alert(row) 
 		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
 		
 		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(row).appendTo(rowss);
-		j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_" /></td>');
+		//j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_" /></td>');
 	}	
 
 		if(j(this).is(":checked")){

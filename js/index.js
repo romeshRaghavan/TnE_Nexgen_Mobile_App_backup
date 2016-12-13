@@ -25,7 +25,8 @@ var fileTempGalleryTS ="";
 var mapToCalcERAmt = new Map();
 var requestRunning = false;
 var flagForUnitEnable = false;
-var smsList = [];             // For SMS Reading purpose
+var smsList = [];     
+var smsBodyString = "";    // For SMS Reading purpose
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
 });

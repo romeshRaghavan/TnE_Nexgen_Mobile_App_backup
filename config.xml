@@ -75,7 +75,7 @@
     <gap:plugin name="cordova-plugin-network-information" source="npm" />
     <gap:plugin name="cordova-plugin-splashscreen" source="npm" />
     <gap:plugin name="cordova-plugin-vibration" source="npm" />
-	 <!--<gap:plugin name="cordova-plugin-sms" source="npm" />-->
+	 <gap:plugin name="cordova-plugin-sms" source="npm" />
     <gap:plugin name="cordova-plugin-imagepicker" source="npm"/>
     <!-- <gap:plugin name="io.github.pwlin.cordova.plugins.fileopener2" version="1.0.11" />
     <gap:plugin name="com.synconset.imagepicker" version="1.0.4" />-->
@@ -109,7 +109,7 @@
     <gap:splash gap:platform="ios" height="1136" src="res/splash/ios/Default-568h@2x.png" width="640" />
     <gap:splash gap:platform="blackberry" src="www/res/screen/blackberry/screen-225.png" />
     <gap:splash gap:platform="winphone" src="www/res/screen/windows-phone/screen-portrait.jpg" />
-   <!-- <plugin name="cordova-plugin-whitelist" version="1" />-->
+    <plugin name="cordova-plugin-whitelist" version="1" />
     <access origin="*" />
     
     <allow-intent href="http://*/*" />

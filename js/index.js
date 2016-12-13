@@ -2948,6 +2948,14 @@ j.ajax({
 
         function parseMessages(smsBodyString){
         	var aa = smsBodyString.split("$");
-        	
-        	updateStatus(aa);
+        	alert(aa.length);
+        	for(var i = 0; i<aa.length;i++){
+        		var temp = aa[i];
+        		if(smsMsg.includes("Rs")){
+        			var msg = temp.split("Rs")
+        			html += ""+msg[1] + "<br/><br/>";
+        		}
+        	}
+        	updateStatus("in parseMessage");
+        	updateData( html );
         }

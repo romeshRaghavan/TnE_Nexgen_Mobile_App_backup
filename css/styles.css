@@ -604,3 +604,45 @@ transition:transform .3s ease-out;
 .table1 {
     margin-bottom: 0px;
 }
+.createewalletlogo {
+	background-image: url("../images/ewaaalte.png");
+	background-repeat: no-repeat;
+	width: 55px;
+	height: 55px;
+	margin-top: 15%;
+	margin-bottom: 3%;
+    margin-left: 30%;
+	margin-right: 70px;
+}
+
+.createcreditcardlogo {
+	background-image: url("../images/creditcard.png");
+	background-repeat: no-repeat;
+	width: 55px;
+	height: 55px;
+	margin-top: 15%;
+	margin-bottom: 3%;
+    margin-left: 30%;
+	margin-right: 70px;
+}
+
+div.img {
+    margin: 1px;
+    float: left;
+    width: 180px;
+    padding-bottom: 5%;
+}
+
+div.img:hover {
+    border: 1px solid #777;
+}
+
+div.img img {
+    width: 62%;
+    height: auto;
+}
+
+div.desc {
+    padding: 15px;
+    text-align: center;
+}

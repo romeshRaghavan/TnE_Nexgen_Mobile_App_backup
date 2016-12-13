@@ -2944,12 +2944,12 @@ j.ajax({
         }
          
 
-        function parseMessages(listMsgs){
+      function parseMessages(listMsgs){
         	var aa = "";
         	for(var i=0; i<listMsgs.length; i++){
-        		var msg = listMsgs[i];
+        		var msg = ""+listMsgs[i];
         		
-        			alert("inside of successful");
+        			alert("inside of parseMessages  "+msg);
           			var sString = msg.split("Rs.");
         			var splitString = sString[1];
         			alert(i+"  "+splitString);

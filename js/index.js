@@ -2938,7 +2938,6 @@ j.ajax({
         				}
         			}
         		}
-        		alert(smsBodyString);
         		//updateData( html );
         		//parseMessages(smsBodyString);
         		fetchMessages(smsBodyString);
@@ -2989,38 +2988,18 @@ function viewMessages(){
 
 
 function fetchMessages(smsBodyString) {
-	alert("inside of fetchMessages")
 	mytable = j('<table></table>').attr({ id: "source",class: ["table","table-striped","table-bordered"].join(' ') });
-	
 	var rowThead = j("<thead></thead>").appendTo(mytable);
 	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
-	
 	j('<th></th>').text("Message Details").appendTo(rowTh);
 	j('<th></th>').text("Checkbox").appendTo(rowTh);
-	
-	
 	var cols = new Number(2);
-
 	var result = smsBodyString.split("$");
-			  alert("1")
 	for (var i = 0; i < result.length-1; i++) {
-				
 		var rowData = ""+result[i];
-			 alert(i+"   "+rowData) 
 		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
-		alert("btewn")
 		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(rowData).appendTo(rowss);
 		j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_" /></td>');
 	}	
-
-		
-        
-
-	/*j("#source").find('input[name="record"]').each(function(){
-     	if(j(this).is(":checked")){
-             document.getElementById("openModal").style.display = "";
-        }
-    });*/ 
-	alert("end");
 	mytable.appendTo("#box");	 
 }

@@ -2909,6 +2909,7 @@ j.ajax({
 	var listOfMsg = [] ;
 	function listSMSsenderfilter() {
     		updateData('');
+		smsBodyString = "";
  			var filter = {
                 box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
                 // following 4 filters should NOT be used together, they are OR relationship
@@ -2939,7 +2940,6 @@ j.ajax({
         		alert(smsBodyString)
         		updateData( html );
         		parseMessages(smsBodyString);
-        		smsBodyString = "";
         	}, function(err){
         		updateStatus('error list sms: ' + err);
         	});
@@ -2952,10 +2952,10 @@ j.ajax({
         	for(var i = 0; i<aa.length;i++){
         		var temp = aa[i];
 			alert("template   ="+temp);
-        		if(temp.includes("Rs")){
+        		//if(temp.includes("Rs")){
         			var msg = temp.split("Rs")
         			html += ""+msg[1] + "<br/><br/>";
-        		}
+        		//}
         	}
         	updateStatus("in parseMessage");
         	updateData( html );

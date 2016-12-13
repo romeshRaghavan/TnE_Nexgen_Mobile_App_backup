@@ -2949,6 +2949,7 @@ j.ajax({
         function parseMessages(smsBodyString){
         	var aa = smsBodyString.split("$");
         	alert(aa.length);
+		var html ="";
         	for(var i = 0; i<aa.length;i++){
         		var temp = aa[i];
 			alert("template   ="+temp);

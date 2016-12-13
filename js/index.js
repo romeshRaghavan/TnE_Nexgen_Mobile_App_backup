@@ -2983,7 +2983,6 @@ function viewMessages(){
 	});
     appPageHistory.push(pageRef);
     alert("before listSMSsenderfilter call");
-    listSMSsenderfilter();
     j('#loading_Cat').hide();
 }
 

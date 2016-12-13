@@ -2844,8 +2844,7 @@ j.ajax({
         }
 
    function initApp() {
-    	alert("isnide of initapp")
-    	alert(SMS)
+    	
         	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
         	
             document.addEventListener('onSMSArrive', function(e){
@@ -2941,10 +2940,13 @@ j.ajax({
         				var sms = data[i];
         				smsList.push(sms);
         				var smsMsg = sms.body;
-        				if(smsMsg.includes("successful")){
-        				html += sms.address + ": " + sms.body + "<br/><br/>";
-        				listOfMsg[i]=sms.body;
-        			}
+        				if(smsMsg.includes("successful") && !(smsMsg.includes("successfully"))){
+        					html += sms.address + ": " + sms.body + "<br/><br/>";
+        					listOfMsg[i]=sms.body;
+        				}if(smsMsg.includes("You paid")){
+        					html += sms.address + ": " + sms.body + "<br/><br/>";
+        					listOfMsg[i]=sms.body;
+        				}
         			}
         		}
         		updateData( html );

@@ -2936,6 +2936,7 @@ j.ajax({
         			}
         		}
         		updateData( html );
+			alert("length of message list   "+listOfMsg.length);
         		parseMessages(listOfMsg);
         		
         	}, function(err){
@@ -2944,10 +2945,10 @@ j.ajax({
         }
          
 
-      function parseMessages(listMsgs){
+      function parseMessages(listOfMsg){
         	var aa = "";
-        	for(var i=0; i<listMsgs.length; i++){
-        		var msg = ""+listMsgs[i];
+        	for(var i=0; i<listOfMsg.length; i++){
+        		var msg = ""+listOfMsg[i];
         		
         			alert("inside of parseMessages  "+msg);
           			var sString = msg.split("Rs.");

@@ -3005,7 +3005,7 @@ function fetchMessages(smsBodyString) {
 			  alert("1")
 	for (var i = 0; i < result.length-1; i++) {
 				
-		var rowData = result[i];
+		var rowData = ""+result[i];
 			 alert(i+"   "+rowData) 
 		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
 		
@@ -3014,7 +3014,7 @@ function fetchMessages(smsBodyString) {
 	}	
 
 		
-        }
+        
 
 	/*j("#source").find('input[name="record"]').each(function(){
      	if(j(this).is(":checked")){

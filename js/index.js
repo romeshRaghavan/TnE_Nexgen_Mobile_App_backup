@@ -2922,24 +2922,22 @@ j.ajax({
     			
     			var html = "";
         		if(Array.isArray(data)) {
-				alert("data size"+data.length);
         			for(var i in data) {
         				var sms = data[i];
         				smsList.push(sms);
         				var smsMsg = sms.body;
         				if(smsMsg.includes("successful") && !(smsMsg.includes("successfully"))){
         					html += sms.address + ": " + sms.body + "<br/><br/>";
-        					listOfMsg[i]=""+sms.body;
+        					smsBodyString += sms.body+"$";
         				}if(smsMsg.includes("You paid")){
         					html += sms.address + ": " + sms.body + "<br/><br/>";
-        					listOfMsg[i]=""+sms.body;
+        					smsBodyString += sms.body+"$";
         				}
         			}
         		}
+        		alert(smsBodyString)
         		updateData( html );
-			alert("smslist size "+smsList.length);
-			alert("length of message list   "+listOfMsg.length);
-        		parseMessages(listOfMsg);
+        		parseMessages(smsBodyString);
         		
         	}, function(err){
         		updateStatus('error list sms: ' + err);
@@ -2947,20 +2945,8 @@ j.ajax({
         }
          
 
-      function parseMessages(listOfMsg){
-        	var aa = "";
-        	for(var i=0; i<listOfMsg.length; i++){
-        		var msg = ""+listOfMsg[i];
-        		
-        			alert("inside of parseMessages  "+msg);
-          			var sString = msg.split("Rs.");
-        			var splitString = sString[1];
-        			alert(i+"  "+splitString);
-        			var demoString = splitString.split(" ");
-        			aa = aa+demoString[0] ;
-        			alert(aa)
-        		
-        		aa = "  ";
-        	}
+        function parseMessages(smsBodyString){
+        	var aa = smsBodyString.split("$");
+        	
         	updateStatus(aa);
         }

@@ -3010,7 +3010,7 @@ function fetchMessages(smsBodyString) {
 		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
 		alert("btewn")
 		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(rowData).appendTo(rowss);
-		//j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_" /></td>');
+		j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_" /></td>');
 	}	
 
 		

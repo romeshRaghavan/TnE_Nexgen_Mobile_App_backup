@@ -2983,6 +2983,7 @@ function viewMessages(){
 	});
     appPageHistory.push(pageRef);
     alert("before listSMSsenderfilter call");
+	listSMSsenderfilter();
     j('#loading_Cat').hide();
 }
 
@@ -2998,23 +2999,21 @@ function fetchMessages(smsBodyString) {
 	j('<th></th>').text("Checkbox").appendTo(rowTh);
 	
 	
-	var cols = new Number(3);
+	var cols = new Number(2);
 
 	var result = smsBodyString.split("$");
 			  alert("1")
 	for (var i = 0; i < result.length-1; i++) {
 				
-		var row = result[i];
-			 alert(row) 
+		var rowData = result[i];
+			 alert(i+"   "+rowData) 
 		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
 		
-		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(row).appendTo(rowss);
+		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(rowData).appendTo(rowss);
 		//j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_" /></td>');
 	}	
 
-		if(j(this).is(":checked")){
-			alert("2");
-             document.getElementById("openModal").style.display = "";
+		
         }
 
 	/*j("#source").find('input[name="record"]').each(function(){

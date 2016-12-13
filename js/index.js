@@ -2937,7 +2937,6 @@ j.ajax({
         				}
         			}
         		}
-        		alert(smsBodyString)
         		updateData( html );
         		parseMessages(smsBodyString);
         	}, function(err){
@@ -2948,15 +2947,13 @@ j.ajax({
 
         function parseMessages(smsBodyString){
         	var aa = smsBodyString.split("$");
-        	alert(aa.length);
 		var html ="";
         	for(var i = 0; i<aa.length;i++){
         		var temp = aa[i];
-			alert("template   ="+temp);
-        		//if(temp.includes("Rs")){
-        			var msg = temp.split("Rs")
+        		if(temp.includes("Rs")){
+        			var msg = temp.split("Rs.")
         			html += ""+msg[1] + "<br/><br/>";
-        		//}
+        		}
         	}
         	updateStatus("in parseMessage");
         	updateData( html );

@@ -2843,21 +2843,7 @@ j.ajax({
         	$('div#data').html( str );
         }
 
-   function initApp() {
-    	
-        	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
-        	
-            document.addEventListener('onSMSArrive', function(e){
-            	var data = e.data;
-            	smsList.push( data );
-            	
-            	updateStatus('SMS arrived, count: ' + smsList.length );
-            	
-            	var divdata = $('div#data');
-            	divdata.html( divdata.html() + JSON.stringify( data ) );
-            	
-            });
-        }    
+    
 
        function listSMS() {
     		updateData('');
@@ -2920,59 +2906,4 @@ j.ajax({
         	});
         }
 	var listOfMsg = [] ;
-	function listSMSsenderfilter() {
-    		updateData('');
- 			var filter = {
-                box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
-                // following 4 filters should NOT be used together, they are OR relationship
-              address : 'VM-IPAYTM', 
-              //body : 'paytm',
-                // following 2 filters can be used to list page up/down
-                indexFrom : 0, // start from index 0
-            };
-        	if(SMS) SMS.listSMS(filter, function(data){
-    			updateStatus('sms listed as json array');
-    			//updateData( JSON.stringify(data) );
-    			
-    			var html = "";
-        		if(Array.isArray(data)) {
-        			for(var i in data) {
-        				var sms = data[i];
-        				smsList.push(sms);
-        				var smsMsg = sms.body;
-        				if(smsMsg.includes("successful") && !(smsMsg.includes("successfully"))){
-        					html += sms.address + ": " + sms.body + "<br/><br/>";
-        					listOfMsg[i]=sms.body;
-        				}if(smsMsg.includes("You paid")){
-        					html += sms.address + ": " + sms.body + "<br/><br/>";
-        					listOfMsg[i]=sms.body;
-        				}
-        			}
-        		}
-        		updateData( html );
-        		parseMessages(listOfMsg);
-        		
-        	}, function(err){
-        		updateStatus('error list sms: ' + err);
-        	});
-        }
-         
-
-        function parseMessages(listMsgs){
-        	var aa = "";
-        	for(var i=0; i<listMsgs.length; i++){
-        		var msg = listMsgs[i];
-        		
-				alert("inside of successful");
-          			var sString = msg.split("Rs\\n");
-			alert(sString[0])
-        			var splitString = sString[1];
-				alert(i+"  "+splitString);
-        			var demoString = splitString.split(" ");
-        			aa = aa+demoString[0] ;
-        			alert(aa)
-        		
-        		aa = "  ";
-        	}
-        	updateStatus(aa);
-        }
+	

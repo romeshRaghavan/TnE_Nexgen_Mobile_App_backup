@@ -2922,20 +2922,22 @@ j.ajax({
     			
     			var html = "";
         		if(Array.isArray(data)) {
+				alert("data size"+data.length);
         			for(var i in data) {
         				var sms = data[i];
         				smsList.push(sms);
         				var smsMsg = sms.body;
         				if(smsMsg.includes("successful") && !(smsMsg.includes("successfully"))){
         					html += sms.address + ": " + sms.body + "<br/><br/>";
-        					listOfMsg[i]=sms.body;
+        					listOfMsg[i]=""+sms.body;
         				}if(smsMsg.includes("You paid")){
         					html += sms.address + ": " + sms.body + "<br/><br/>";
-        					listOfMsg[i]=sms.body;
+        					listOfMsg[i]=""+sms.body;
         				}
         			}
         		}
         		updateData( html );
+			alert("smslist size "+smsList.length);
 			alert("length of message list   "+listOfMsg.length);
         		parseMessages(listOfMsg);
         		

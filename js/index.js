@@ -2907,9 +2907,8 @@ j.ajax({
         	});
         }
 	var listOfMsg = [] ;
-	function listSMSsenderfilter() {
-    		updateData('');
-		smsBodyString = "";
+	 function listSMSsenderfilter() {
+    		//updateData('');
  			var filter = {
                 box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
                 // following 4 filters should NOT be used together, they are OR relationship
@@ -2919,7 +2918,7 @@ j.ajax({
                 indexFrom : 0, // start from index 0
             };
         	if(SMS) SMS.listSMS(filter, function(data){
-    			updateStatus('sms listed as json array');
+    			//updateStatus('sms listed as json array');
     			//updateData( JSON.stringify(data) );
     			
     			var html = "";
@@ -2937,24 +2936,90 @@ j.ajax({
         				}
         			}
         		}
-        		updateData( html );
-        		parseMessages(smsBodyString);
+        		//updateData( html );
+        		//parseMessages(smsBodyString);
+        		fetchMessages(smsBodyString);
+        		
         	}, function(err){
-        		updateStatus('error list sms: ' + err);
+        		//updateStatus('error list sms: ' + err);
         	});
         }
          
 
         function parseMessages(smsBodyString){
         	var aa = smsBodyString.split("$");
-		var html ="";
-        	for(var i = 0; i<aa.length;i++){
+        	var html = "";
+        	for(var i = 0; i<aa.length-1;i++){
         		var temp = aa[i];
-        		if(temp.includes("Rs")){
-        			var msg = temp.split("Rs.")
+        		var smsMsg = temp[1];
+        		if(smsMsg.includes("Rs.")){
+        			var msg = temp.split("Rs")
         			html += ""+msg[1] + "<br/><br/>";
         		}
         	}
         	updateStatus("in parseMessage");
         	updateData( html );
         }
+
+      function createEWallet(){
+		 
+		 var headerBackBtn=defaultPagePath+'headerPageForWalletOperation.html';
+		 var pageRef=defaultPagePath+'eWalletOptions.html';
+			j(document).ready(function() {
+				j('#mainHeader').load(headerBackBtn);
+				j('#mainContainer').load(pageRef);
+			});
+      appPageHistory.push(pageRef);
+	 }
+
+function viewMessages(){
+    var pageRef=defaultPagePath+'fairMessageTable.html';
+    var headerBackBtn=defaultPagePath+'headerPageForBEOperation.html';
+	j(document).ready(function() {	
+		j('#mainHeader').load(headerBackBtn);
+		j('#mainContainer').load(pageRef);
+	});
+    appPageHistory.push(pageRef);
+    resetImageData();
+    listSMSsenderfilter();
+    j('#loading_Cat').hide();
+}
+
+
+function fetchMessages(smsBodyString) {
+	
+	mytable = j('<table></table>').attr({ id: "source",class: ["table","table-striped","table-bordered"].join(' ') });
+	
+	var rowThead = j("<thead></thead>").appendTo(mytable);
+	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
+	
+	j('<th></th>').text("Message Details").appendTo(rowTh);
+	j('<th></th>').text("Checkbox").appendTo(rowTh);
+	
+	
+	var cols = new Number(3);
+
+	var result = smsBodyString.split("$");
+			  
+	for (var i = 0; i < result.length; i++) {
+				
+		var row = result[i];
+			  
+		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
+		
+		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(row).appendTo(rowss);
+		j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_" /></td>');
+	}	
+
+		if(j(this).is(":checked")){
+			alert("2");
+             document.getElementById("openModal").style.display = "";
+        }
+
+	/*j("#source").find('input[name="record"]').each(function(){
+     	if(j(this).is(":checked")){
+             document.getElementById("openModal").style.display = "";
+        }
+    });*/ 
+	mytable.appendTo("#box");	 
+ }

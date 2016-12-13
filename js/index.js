@@ -2908,6 +2908,7 @@ j.ajax({
         }
 	var listOfMsg = [] ;
 	 function listSMSsenderfilter() {
+        	alert("inside of listSMSsenderfilter")
     		//updateData('');
  			var filter = {
                 box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
@@ -2936,6 +2937,7 @@ j.ajax({
         				}
         			}
         		}
+        		alert(smsBodyString);
         		//updateData( html );
         		//parseMessages(smsBodyString);
         		fetchMessages(smsBodyString);
@@ -2980,14 +2982,14 @@ function viewMessages(){
 		j('#mainContainer').load(pageRef);
 	});
     appPageHistory.push(pageRef);
-    resetImageData();
+    alert("before listSMSsenderfilter call");
     listSMSsenderfilter();
     j('#loading_Cat').hide();
 }
 
 
 function fetchMessages(smsBodyString) {
-	
+	alert("inside of fetchMessages")
 	mytable = j('<table></table>').attr({ id: "source",class: ["table","table-striped","table-bordered"].join(' ') });
 	
 	var rowThead = j("<thead></thead>").appendTo(mytable);

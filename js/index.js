@@ -3002,11 +3002,11 @@ function fetchMessages(smsBodyString) {
 	var cols = new Number(3);
 
 	var result = smsBodyString.split("$");
-			  
+			  alert("1")
 	for (var i = 0; i < result.length; i++) {
 				
 		var row = result[i];
-			  
+			 alert(row) 
 		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
 		
 		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(row).appendTo(rowss);
@@ -3024,4 +3024,4 @@ function fetchMessages(smsBodyString) {
         }
     });*/ 
 	mytable.appendTo("#box");	 
- }
+}

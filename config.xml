@@ -26,7 +26,7 @@
     <preference name="android-maxSdkVersion" value="24" />
     <preference name="android-installLocation" value="auto" />
     <preference name="phonegap-version" value="cli-5.2.0" />
-    <preference name="android-build-tool" value="gradle" />
+    
 
      <feature name="http://api.phonegap.com/1.0/device" />
     <!-- <feature name="http://api.phonegap.com/1.0/camera"/> -->
@@ -75,7 +75,7 @@
     <gap:plugin name="cordova-plugin-network-information" source="npm" />
     <gap:plugin name="cordova-plugin-splashscreen" source="npm" />
     <gap:plugin name="cordova-plugin-vibration" source="npm" />
-	<gap:plugin name="cordova-plugin-sms" source="npm" />
+	
     <gap:plugin name="cordova-plugin-imagepicker" source="npm"/>
     <!-- <gap:plugin name="io.github.pwlin.cordova.plugins.fileopener2" version="1.0.11" />
     <gap:plugin name="com.synconset.imagepicker" version="1.0.4" />-->

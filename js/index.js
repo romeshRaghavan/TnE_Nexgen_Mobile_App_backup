@@ -2910,6 +2910,7 @@ j.ajax({
 	 function listSMSsenderfilter() {
         	alert("inside of listSMSsenderfilter")
     		//updateData('');
+		 smsBodyString = "";
  			var filter = {
                 box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
                 // following 4 filters should NOT be used together, they are OR relationship
@@ -2982,8 +2983,7 @@ function viewMessages(){
 		j('#mainContainer').load(pageRef);
 	});
     appPageHistory.push(pageRef);
-    alert("before listSMSsenderfilter call");
-	listSMSsenderfilter();
+    
     j('#loading_Cat').hide();
 }
 
@@ -3008,7 +3008,7 @@ function fetchMessages(smsBodyString) {
 		var rowData = ""+result[i];
 			 alert(i+"   "+rowData) 
 		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
-		
+		alert("btewn")
 		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(rowData).appendTo(rowss);
 		//j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_" /></td>');
 	}	
@@ -3021,5 +3021,6 @@ function fetchMessages(smsBodyString) {
              document.getElementById("openModal").style.display = "";
         }
     });*/ 
+	alert("end");
 	mytable.appendTo("#box");	 
 }

@@ -2835,7 +2835,7 @@ j.ajax({
 	function initApp() {
     	updateStatus('init app called' );
         	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
-        	
+        	updateStatus('SMS count: ' + smsList.length );
             document.addEventListener('onSMSArrive', function(e){
             	alert("onSMSArrive  event triggerd")
             	var data = e.data;
@@ -2846,8 +2846,9 @@ j.ajax({
             	var divdata = $('div#data');
             	divdata.html( divdata.html() + JSON.stringify( data ) );
             	
-            });
-        }    
+            },false);
+            alert('end of init' );
+        }   
 
 
 	 function update( id, str ) {

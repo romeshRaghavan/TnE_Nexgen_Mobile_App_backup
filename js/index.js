@@ -2923,22 +2923,28 @@ j.ajax({
     			//updateData( JSON.stringify(data) );
     			
     			var html = "";
+    			var testDate ="";
         		if(Array.isArray(data)) {
         			for(var i in data) {
         				var sms = data[i];
         				smsList.push(sms);
         				var smsMsg = sms.body;
+        				var smsDate = sms.date_sent;
         				if(smsMsg.includes("successful") && !(smsMsg.includes("successfully"))){
         					html += sms.address + ": " + sms.body + "<br/><br/>";
         					smsBodyString += sms.body+"$";
+        					testDate += smsDate + "_";
         				}if(smsMsg.includes("You paid")){
         					html += sms.address + ": " + sms.body + "<br/><br/>";
         					smsBodyString += sms.body+"$";
+        					testDate += smsDate + "_";
         				}
         			}
         		}
         		//updateData( html );
-        		parseMessages(smsBodyString);
+			alert("testDate   "+testDate);
+        		smsBodyString = smsBodyString + "@" + testDate;
+			parseMessages(smsBodyString);
         	}, function(err){
         		//updateStatus('error list sms: ' + err);
         	});
@@ -2946,7 +2952,7 @@ j.ajax({
          
 
          function parseMessages(smsBodyString){
-        	        	var aa = smsBodyString.split("$");
+        	var aa = smsBodyString.split("$");
         	var html = "";
         	
         	for(var i = 0; i<aa.length-1;i++){
@@ -2998,19 +3004,24 @@ function fetchMessages(smsBodyString) {
 	
 	j('<th></th>').text("Message Details").appendTo(rowTh);
 	j('<th></th>').text("Amount").appendTo(rowTh);
+	j('<th></th>').text("Date").appendTo(rowTh);
 	j('<th></th>').text("Checkbox").appendTo(rowTh);
 	var cols = new Number(3);
 
 	var result = smsBodyString.split("@");
 	var smsBodyResult = result[0];
-	var smsAmountResult = result[1];
+	var smsSentDate = result[1];
+	var smsAmountResult = result[2];
 	var smsBody = smsBodyResult.split("$");
 	var smsAmount = smsAmountResult.split("#");
-	for (var i = 0; i < smsBody.length; i++) {
+	var smsDate = smsSentDate.split("_");
+	for (var i = 0; i < smsBody.length-1; i++) {
 		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
 		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(smsBody[i]).appendTo(rowss);
-		j('<td></td>').attr({ class: ["amount"].join(' ') }).text(smsAmount[i]).appendTo(rowss);
-		j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_" /></td>');
-	}	
+		j(rowss).append('<td><input type = "text"  id = "amt_'+i+'" value= "'+smsAmount[i]+'" style = "width: 88px;"/></td>');
+		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(smsDate[i]).appendTo(rowss);
+		j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_'+i+'" style = "height: 20px; width: 20px;"/></td>');
+
+	}		
 	mytable.appendTo("#box");	 
  }

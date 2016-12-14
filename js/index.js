@@ -2945,14 +2945,18 @@ j.ajax({
          
 
          function parseMessages(smsBodyString){
-        	var aa = smsBodyString.split("$");
+        	        	var aa = smsBodyString.split("$");
         	var html = "";
+        	
         	for(var i = 0; i<aa.length-1;i++){
         		var temp = aa[i];
         		if(temp.includes("Rs.")){
         			var msg = temp.split("Rs.")
-        			var rsExtractStr = msg.split(" ");
-        			html += ""+rsExtractStr[0] + "#";
+        			var test  =  msg[1];
+          
+        			var rsExtractStr = test.split(" ");
+          
+        			html += ""+rsExtractStr[0]+"#";
         		}
         	}
         	// updateStatus("in parseMessage");
@@ -2960,9 +2964,8 @@ j.ajax({
         	alert(html)
         	smsBodyString = smsBodyString + "@" + html;
         	alert("smsBodyString    "+smsBodyString);
-        	fetchMessages(smsBodyString);
-        }
-
+		 fetchMessages(smsBodyString);
+	 }
       function createEWallet(){
 		 
 		 var headerBackBtn=defaultPagePath+'headerPageForWalletOperation.html';

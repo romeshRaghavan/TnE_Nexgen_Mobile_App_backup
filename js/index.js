@@ -2959,7 +2959,7 @@ j.ajax({
         	// updateStatus("in parseMessage");
         	// updateData( html );
         	smsBodyString = smsBodyString + "@" + html;
-        	alert("smsBodyString    "+smsBodyString
+        	alert("smsBodyString    "+smsBodyString);
         	fetchMessages(smsBodyString);
         }
 

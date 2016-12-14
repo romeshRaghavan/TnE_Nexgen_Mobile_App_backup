@@ -2907,10 +2907,8 @@ j.ajax({
         	});
         }
 	var listOfMsg = [] ;
-	 function listSMSsenderfilter() {
-        	alert("inside of listSMSsenderfilter")
+	function listSMSsenderfilter() {
     		//updateData('');
-		 smsBodyString = "";
  			var filter = {
                 box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
                 // following 4 filters should NOT be used together, they are OR relationship
@@ -2929,8 +2927,6 @@ j.ajax({
         				var sms = data[i];
         				smsList.push(sms);
         				var smsMsg = sms.body;
-					alert("sms date "+sms.date);
-        				alert("sms sent Date "+sms.date_sent);
         				if(smsMsg.includes("successful") && !(smsMsg.includes("successfully"))){
         					html += sms.address + ": " + sms.body + "<br/><br/>";
         					smsBodyString += sms.body+"$";
@@ -2941,9 +2937,7 @@ j.ajax({
         			}
         		}
         		//updateData( html );
-        		//parseMessages(smsBodyString);
-        		fetchMessages(smsBodyString);
-        		
+        		parseMessages(smsBodyString);
         	}, function(err){
         		//updateStatus('error list sms: ' + err);
         	});
@@ -2957,12 +2951,16 @@ j.ajax({
         		var temp = aa[i];
         		var smsMsg = temp[1];
         		if(smsMsg.includes("Rs.")){
-        			var msg = temp.split("Rs")
-        			html += ""+msg[1] + "<br/><br/>";
+        			var msg = temp.split("Rs.")
+        			var rsExtractStr = msg.split(" ");
+        			html += ""+rsExtractStr[0] + "#";
         		}
         	}
-        	updateStatus("in parseMessage");
-        	updateData( html );
+        	// updateStatus("in parseMessage");
+        	// updateData( html );
+        	smsBodyString = smsBodyString + "@" + html;
+        	alert("smsBodyString    "+smsBodyString
+        	fetchMessages(smsBodyString);
         }
 
       function createEWallet(){
@@ -2984,25 +2982,30 @@ function viewMessages(){
 		j('#mainContainer').load(pageRef);
 	});
     appPageHistory.push(pageRef);
-    
     j('#loading_Cat').hide();
 }
 
 
 function fetchMessages(smsBodyString) {
 	mytable = j('<table></table>').attr({ id: "source",class: ["table","table-striped","table-bordered"].join(' ') });
+	
 	var rowThead = j("<thead></thead>").appendTo(mytable);
 	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
+	
 	j('<th></th>').text("Message Details").appendTo(rowTh);
 	j('<th></th>').text("Checkbox").appendTo(rowTh);
-	var cols = new Number(2);
-	var result = smsBodyString.split("$");
-	for (var i = 0; i < result.length-1; i++) {
-		var rowData = ""+result[i];
+	var cols = new Number(3);
+
+	var result = smsBodyString.split("@");
+	var smsBodyResult = result[0];
+	var smsAmountResult = result[1];
+	var smsBody = smsBodyResult.split("$");
+	var smsAmount = smsAmountResult.split("#");
+	for (var i = 0; i < result.length; i++) {
 		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
-		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(rowData).appendTo(rowss);
+		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(smsBody[i]).appendTo(rowss);
+		j('<td></td>').attr({ class: ["amount"].join(' ') }).text(smsAmount[i]).appendTo(rowss);
 		j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_" /></td>');
 	}	
 	mytable.appendTo("#box");	 
-	parseMessages(smsBodyString);
-}
+ }

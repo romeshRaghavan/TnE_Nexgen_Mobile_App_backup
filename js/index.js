@@ -2944,13 +2944,12 @@ j.ajax({
         }
          
 
-        function parseMessages(smsBodyString){
+         function parseMessages(smsBodyString){
         	var aa = smsBodyString.split("$");
         	var html = "";
         	for(var i = 0; i<aa.length-1;i++){
         		var temp = aa[i];
-        		var smsMsg = temp[1];
-        		if(smsMsg.includes("Rs.")){
+        		if(temp.includes("Rs.")){
         			var msg = temp.split("Rs.")
         			var rsExtractStr = msg.split(" ");
         			html += ""+rsExtractStr[0] + "#";
@@ -2958,6 +2957,7 @@ j.ajax({
         	}
         	// updateStatus("in parseMessage");
         	// updateData( html );
+        	alert(html)
         	smsBodyString = smsBodyString + "@" + html;
         	alert("smsBodyString    "+smsBodyString);
         	fetchMessages(smsBodyString);

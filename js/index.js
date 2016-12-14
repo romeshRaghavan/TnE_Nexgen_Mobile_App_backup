@@ -3005,7 +3005,7 @@ function fetchMessages(smsBodyString) {
 	var smsAmountResult = result[1];
 	var smsBody = smsBodyResult.split("$");
 	var smsAmount = smsAmountResult.split("#");
-	for (var i = 0; i < result.length; i++) {
+	for (var i = 0; i < smsBody.length; i++) {
 		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
 		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(smsBody[i]).appendTo(rowss);
 		j('<td></td>').attr({ class: ["amount"].join(' ') }).text(smsAmount[i]).appendTo(rowss);

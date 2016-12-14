@@ -2929,6 +2929,8 @@ j.ajax({
         				var sms = data[i];
         				smsList.push(sms);
         				var smsMsg = sms.body;
+					alert("sms date "+sms.date);
+        				alert("sms sent Date "+sms.date_sent);
         				if(smsMsg.includes("successful") && !(smsMsg.includes("successfully"))){
         					html += sms.address + ": " + sms.body + "<br/><br/>";
         					smsBodyString += sms.body+"$";
@@ -3002,4 +3004,5 @@ function fetchMessages(smsBodyString) {
 		j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_" /></td>');
 	}	
 	mytable.appendTo("#box");	 
+	parseMessages(smsBodyString);
 }

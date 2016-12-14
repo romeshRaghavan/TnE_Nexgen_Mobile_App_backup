@@ -2954,7 +2954,7 @@ j.ajax({
         			var msg = temp.split("Rs.")
         			var test  =  msg[1];
           
-        			var rsExtractStr = test.split(" ");
+        			var rsExtractStr = test.trim().split(" ");
           
         			html += ""+rsExtractStr[0]+"#";
         		}
@@ -2996,6 +2996,7 @@ function fetchMessages(smsBodyString) {
 	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
 	
 	j('<th></th>').text("Message Details").appendTo(rowTh);
+	j('<th></th>').text("Amount").appendTo(rowTh);
 	j('<th></th>').text("Checkbox").appendTo(rowTh);
 	var cols = new Number(3);
 

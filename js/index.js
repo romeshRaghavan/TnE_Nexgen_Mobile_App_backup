@@ -2832,6 +2832,22 @@ j.ajax({
 			});
       appPageHistory.push(pageRef);
 	 }
+	function initApp() {
+    	updateStatus('init app called' );
+        	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
+        	
+            document.addEventListener('onSMSArrive', function(e){
+            	alert("onSMSArrive  event triggerd")
+            	var data = e.data;
+            	smsList.push( data );
+            	
+            	updateStatus('SMS arrived, count: ' + smsList.length );
+            	
+            	var divdata = $('div#data');
+            	divdata.html( divdata.html() + JSON.stringify( data ) );
+            	
+            });
+        }    
 
 
 	 function update( id, str ) {
@@ -3019,9 +3035,20 @@ function fetchMessages(smsBodyString) {
 		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
 		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(smsBody[i]).appendTo(rowss);
 		j(rowss).append('<td><input type = "text"  id = "amt_'+i+'" value= "'+smsAmount[i]+'" style = "width: 88px;"/></td>');
-		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(smsDate[i]).appendTo(rowss);
+		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(getFormattedDateFromMillisec(smsDate[i])).appendTo(rowss);
 		j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_'+i+'" style = "height: 20px; width: 20px;"/></td>');
 
 	}		
 	mytable.appendTo("#box");	 
  }
+
+ function getFormattedDateFromMillisec(input){
+    
+	var time = new Date(input);
+	var theyear=time.getFullYear()
+	var themonth=time.getMonth()+1
+	var thetoday=time.getDate()
+    var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    return thetoday+"-"+months[(themonth-1)]+"-"+theyear;
+}

@@ -2836,17 +2836,7 @@ j.ajax({
     	updateStatus('init app called' );
         	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
         	updateStatus('SMS count: ' + smsList.length );
-            document.addEventListener('onSMSArrive', function(e){
-            	alert("onSMSArrive  event triggerd")
-            	var data = e.data;
-            	smsList.push( data );
-            	
-            	updateStatus('SMS arrived, count: ' + smsList.length );
-            	
-            	var divdata = $('div#data');
-            	divdata.html( divdata.html() + JSON.stringify( data ) );
-            	
-            },false);
+            document.addEventListener('onSMSArrive',abc,false);
             alert('end of init' );
         }   
 
@@ -3053,3 +3043,5 @@ function fetchMessages(smsBodyString) {
 
     return thetoday+"-"+months[(themonth-1)]+"-"+theyear;
 }
+function abc(){
+	alert("triiger")

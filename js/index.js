@@ -2547,7 +2547,7 @@ function hideEAMenus(){
 
 function hideEmployeeAdvance(){
 	if(window.localStorage.getItem("EaInMobile") == "true"){
-        fetchEmployeeAdvance();
+       fetchsmsClaim();
         document.getElementById('helpimage').style.display="";
 		//document.getElementById('EA').style.display="";
 	}else{
@@ -3057,7 +3057,8 @@ function abc(e){
 	smsList.push( data );
 	alert(data);
 	alert("smsList  "+smsList);
-   	saveSMS(data);          	
+   	saveSMS(data);     
+	alert("save successfull");
 }
 function restoreAllSMS() {
     		

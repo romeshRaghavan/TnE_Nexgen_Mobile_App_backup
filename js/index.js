@@ -31,7 +31,9 @@ var updateStrForSMS = "" ;
  var interceptEnabled = false;// For SMS Reading purpose
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
- document.addEventListener('onSMSArrive',abc,false);
+ document.addEventListener('onSMSArrive',function(e){
+			 	abc(e);
+			 },false);
 });
 
 function login()
@@ -64,7 +66,7 @@ function login()
              j('#mainContainer').load(pageRef);
               appPageHistory.push(pageRef);
 			  //addEmployeeDetails(data);
-                 
+                 	  startWatch();
 			  setUserStatusInLocalStorage("Valid");
 			  setUserSessionDetails(data,jsonToBeSend);
                            
@@ -2839,7 +2841,9 @@ j.ajax({
     	updateStatus('init app called' );
         	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
         	updateStatus('SMS count: ' + smsList.length );
-            document.addEventListener('onSMSArrive',abc,false);
+            document.addEventListener('onSMSArrive',function(e){
+ 				abc(e);
+			 },false);
             alert('end of init' );
         }   
 
@@ -3046,8 +3050,13 @@ function fetchMessages(smsBodyString) {
 
     return thetoday+"-"+months[(themonth-1)]+"-"+theyear;
 }
-function abc(){
+function abc(e){
 	alert("triiger");
+	var data = e.data;
+	smsList.push( data );
+	alert(data);
+	alert("smsList  "+smsList);
+   	updateStatus('SMS arrived, count: ' + smsList.length ) 	
 }
 function restoreAllSMS() {
     		
@@ -3060,11 +3069,11 @@ function restoreAllSMS() {
         		updateStatus(updateStrForSMS +'error restore sms: ' + err);
         	});
         }
-        function startWatch() {
+         function startWatch() {
         	if(SMS) SMS.startWatch(function(){
-        		update(updateStrForSMS+'watching', 'watching started');
+        		alert(updateStrForSMS+'watching started'); 
         	}, function(){
-        		updateStatus(updateStrForSMS+'failed to start watching');
+        		alert(updateStrForSMS+'failed to start watching');
         	});
         }
         function stopWatch() {

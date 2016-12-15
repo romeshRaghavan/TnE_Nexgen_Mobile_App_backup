@@ -31,6 +31,7 @@ var updateStrForSMS = "" ;
  var interceptEnabled = false;// For SMS Reading purpose
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
+	startWatch();
  document.addEventListener('onSMSArrive',function(e){
 			 	abc(e);
 			 },false);
@@ -66,7 +67,7 @@ function login()
              j('#mainContainer').load(pageRef);
               appPageHistory.push(pageRef);
 			  //addEmployeeDetails(data);
-                 	  startWatch();
+                 	  
 			  setUserStatusInLocalStorage("Valid");
 			  setUserSessionDetails(data,jsonToBeSend);
                            

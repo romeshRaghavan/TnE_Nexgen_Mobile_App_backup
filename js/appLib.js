@@ -1891,4 +1891,53 @@ function saveSMS(sms){
 	} else {
         alert("db not found, your browser does not support web sql!");
     }
-}	
+}
+
+
+function fetchsmsClaim() {
+	
+	mytable = j('<table></table>').attr({ id: "source",class: ["table","table-striped","table-bordered"].join(' ') });
+	var rowThead = j("<thead></thead>").appendTo(mytable);
+	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
+	
+	j('<th></th>').text("SMS Date").appendTo(rowTh);
+	j('<th></th>').text("Sender").appendTo(rowTh); 	
+	j('<th></th>').text("Text").appendTo(rowTh);
+	//j('<th></th>').text("Amt").appendTo(rowTh);
+	var cols = new Number(5);
+	 
+	mydb.transaction(function(t) {
+		var headerOprationBtn;
+      t.executeSql('SELECT * FROM smsMaster;', [],
+		 function(transaction, result) {
+		  if (result != null && result.rows != null) {
+			  
+			for (var i = 0; i < result.rows.length; i++) {
+				
+				var row = result.rows.item(i);
+				//var newDateFormat = reverseConvertDate(row.expDate.substring(0,2))+"-"+row.expDate.substring(3,5)+" "+row.expDate.substring(6,10); 
+				j('<td></td>').attr({ class: ["smsSentDate",""].join(' ') }).text(row.smsSentDate).appendTo(rowss);
+				j('<td></td>').attr({ class: ["senderAddr",""].join(' ') }).text(row.senderAddr).appendTo(rowss);
+				j('<td></td>').attr({ class: ["smsText",""].join(' ') }).text(row.smsText).appendTo(rowss);
+			}	
+					
+			j("#source tr").click(function(){ 
+				headerOprationBtn = defaultPagePath+'headerPageForBEOperation.html';
+				if(j(this).hasClass("selected")){ 
+				var headerBackBtn=defaultPagePath+'headerPageForBEOperation.html';
+					j(this).removeClass('selected');
+					j('#mainHeader').load(headerBackBtn);
+				}else{
+				if(j(this).text()=='DateExpense NameNarration From/To LocAmt'){
+					
+				}else{
+					j('#mainHeader').load(headerOprationBtn);
+					j(this).addClass('selected');
+				}					
+				}								
+			});
+			}
+		 });
+	 });	 
+	 mytable.appendTo("#box");		 
+ }	

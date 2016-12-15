@@ -26,7 +26,9 @@ var mapToCalcERAmt = new Map();
 var requestRunning = false;
 var flagForUnitEnable = false;
 var smsList = [];     
-var smsBodyString = "";    // For SMS Reading purpose
+var smsBodyString = "";  
+var updateStrForSMS = "" ;
+ var interceptEnabled = false;// For SMS Reading purpose
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
  document.addEventListener('onSMSArrive',abc,false);
@@ -3047,3 +3049,41 @@ function fetchMessages(smsBodyString) {
 function abc(){
 	alert("triiger");
 }
+function restoreAllSMS() {
+    		
+        	if(SMS) SMS.restoreSMS(smsList, function( n ){
+        		// clear the list if restore successfully
+        		smsList.length = 0;
+        		updateStatus(updateStrForSMS+ n + ' sms messages restored');
+        		
+        	}, function(err){
+        		updateStatus(updateStrForSMS +'error restore sms: ' + err);
+        	});
+        }
+        function startWatch() {
+        	if(SMS) SMS.startWatch(function(){
+        		update(updateStrForSMS+'watching', 'watching started');
+        	}, function(){
+        		updateStatus(updateStrForSMS+'failed to start watching');
+        	});
+        }
+        function stopWatch() {
+        	if(SMS) SMS.stopWatch(function(){
+        		update(updateStrForSMS+'watching', 'watching stopped');
+        	}, function(){
+        		updateStatus(updateStrForSMS+'failed to stop watching');
+        	});
+        }
+        
+        function toggleIntercept() {
+        	interceptEnabled = ! interceptEnabled;
+        	
+        	if(interceptEnabled) { // clear the list before we start intercept
+        		smsList.length = 0;
+        	}
+        	
+        	if(SMS) SMS.enableIntercept(interceptEnabled, function(){}, function(){});
+        	
+        	$('span#intercept').text( 'intercept ' + (interceptEnabled ? 'ON' : 'OFF') );
+        	$('button#enable_intercept').text( interceptEnabled ? 'Disable' : 'Enable' );
+        }

@@ -153,6 +153,7 @@ if (window.openDatabase) {
                 t.executeSql("CREATE TABLE IF NOT EXISTS advanceType (advancetypeID INTEGER PRIMARY KEY ASC, advancetype TEXT)");
                 t.executeSql("CREATE TABLE IF NOT EXISTS employeeAdvanceDetails (empAdvID INTEGER PRIMARY KEY ASC, emplAdvVoucherNo TEXT,empAdvTitle TEXT,Amount Double)");
                 t.executeSql("CREATE TABLE IF NOT EXISTS currencyConversionMst (currencyCovId INTEGER PRIMARY KEY ASC, currencyId INTEGER REFERENCES currencyMst(currencyId), defaultcurrencyId INTEGER ,conversionRate Double)");
+		t.executeSql("CREATE TABLE IF NOT EXISTS smsMaster (smsId INTEGER PRIMARY KEY ASC, smsText TEXT,senderAddr TEXT,smsSentDate TEXT)");
     });
 } else {
     alert("WebSQL is not supported by your browser!");
@@ -1865,3 +1866,29 @@ function deleteSelectedEmplAdv(employeeAdvDetailId){
 			});
 	  }
 
+//  sms changes
+
+function saveSMS(sms){
+	j('#loading_Cat').show();
+	if (mydb) {
+		//get the values of the SMS
+    var smsMsg = sms.body;
+	var senderAddress = sms.address;		
+	var smsSentDate = getFormattedDateFromMillisec(sms.date_sent);
+	//if((senderAddress.includes("paytm") || senderAddress.includes("PAYTM") || senderAddress.includes("Paytm"))
+	//	&&(smsMsg.includes("successful") && !(smsMsg.includes("successfully")))) {
+		if (smsMsg != "") {
+	            mydb.transaction(function (t) {
+	                t.executeSql("INSERT INTO smsMaster (smsText,senderAddr,smsSentDate) VALUES (?,?,?)", 
+												[smsMsg,senderAddress,smsSentDate]);
+				});
+	            j('#loading_Cat').hide();
+	        } else {
+	        	j('#loading_Cat').hide();
+	            alert("You must enter inputs!");
+	        }
+   // }
+	} else {
+        alert("db not found, your browser does not support web sql!");
+    }
+}	

@@ -31,7 +31,7 @@ var updateStrForSMS = "" ;
  var interceptEnabled = false;// For SMS Reading purpose
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
-	startWatch();
+	
  document.addEventListener('onSMSArrive',function(e){
 			 	abc(e);
 			 },false);

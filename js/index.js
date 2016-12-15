@@ -28,6 +28,7 @@ var flagForUnitEnable = false;
 var smsList = [];     
 var smsBodyString = "";  
 var updateStrForSMS = "" ;
+var smsWatchFlagStatus = false;
  var interceptEnabled = false;// For SMS Reading purpose
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
@@ -3071,10 +3072,13 @@ function restoreAllSMS() {
         		updateStatus(updateStrForSMS +'error restore sms: ' + err);
         	});
         }
-         function startWatch() {
-        	if(SMS) SMS.startWatch(function(){
-        		alert(updateStrForSMS+'watching started'); 
-        	}, function(){
+        function startWatch() {
+        	if(smsWatchFlagStatus = false){
+        		if(SMS) SMS.startWatch(function(){
+        			smsWatchFlagStatus = true;
+        			alert(updateStrForSMS+'watching started'); 
+        	}}, function(){
+        		smsWatchFlagStatus = false ;
         		alert(updateStrForSMS+'failed to start watching');
         	});
         }

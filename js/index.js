@@ -2551,7 +2551,7 @@ function hideEmployeeAdvance(){
         document.getElementById('helpimage').style.display="";
 		//document.getElementById('EA').style.display="";
 	}else{
-        fetchExpenseClaim();
+        fetchsmsClaim();
         document.getElementById('helpimage').style.display="none";
 		document.getElementById('EA').style.display="none";
 	}

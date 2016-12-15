@@ -3057,7 +3057,7 @@ function abc(e){
 	smsList.push( data );
 	alert(data);
 	alert("smsList  "+smsList);
-   	updateStatus('SMS arrived, count: ' + smsList.length ) 	
+   	saveSMS(data);          	
 }
 function restoreAllSMS() {
     		

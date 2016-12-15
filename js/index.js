@@ -29,6 +29,9 @@ var smsList = [];
 var smsBodyString = "";    // For SMS Reading purpose
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
+if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
+
+ document.addEventListener('onSMSArrive',abc,false);
 });
 
 function login()

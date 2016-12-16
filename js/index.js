@@ -71,7 +71,9 @@ function login()
                  	  
 			  setUserStatusInLocalStorage("Valid");
 			  setUserSessionDetails(data,jsonToBeSend);
-                           
+                             if(smsWatchFlagStatus = false){
+                  startWatch();         
+			  }
                 if(data.hasOwnProperty('EaInMobile') && 
                  data.EaInMobile != null){
                   if(data.EaInMobile){
@@ -3073,11 +3075,10 @@ function restoreAllSMS() {
         	});
         }
         function startWatch() {
-        	if(smsWatchFlagStatus = false){
         		if(SMS) SMS.startWatch(function(){
         			smsWatchFlagStatus = true;
         			alert(updateStrForSMS+'watching started'); 
-        	}}, function(){
+        	}, function(){
         		smsWatchFlagStatus = false ;
         		alert(updateStrForSMS+'failed to start watching');
         	});

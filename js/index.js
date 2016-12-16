@@ -2926,20 +2926,13 @@ j.ajax({
         }
 	var listOfMsg = [] ;
 	function listSMSsenderfilter() {
-    		//updateData('');
 		smsBodyString= "";
  			var filter = {
                 box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
-                // following 4 filters should NOT be used together, they are OR relationship
-              address : 'VM-IPAYTM', 
-              //body : 'paytm',
-                // following 2 filters can be used to list page up/down
+	              address : 'VM-IPAYTM', 
                 indexFrom : 0, // start from index 0
             };
         	if(SMS) SMS.listSMS(filter, function(data){
-    			//updateStatus('sms listed as json array');
-    			//updateData( JSON.stringify(data) );
-    			
     			var html = "";
     			var testDate ="";
         		if(Array.isArray(data)) {
@@ -2959,8 +2952,6 @@ j.ajax({
         				}
         			}
         		}
-        		//updateData( html );
-			alert("testDate   "+testDate);
         		smsBodyString = smsBodyString + "@" + testDate;
 			parseMessages(smsBodyString);
         	}, function(err){
@@ -2984,16 +2975,12 @@ j.ajax({
         			html += ""+rsExtractStr[0]+"#";
         		}
         	}
-        	// updateStatus("in parseMessage");
-        	// updateData( html );
-        	alert(html)
         	smsBodyString = smsBodyString + "@" + html;
-        	alert("smsBodyString    "+smsBodyString);
 		 fetchMessages(smsBodyString);
 	 }
       function createEWallet(){
 		 
-		 var headerBackBtn=defaultPagePath+'headerPageForWalletOperation.html';
+		 var headerBackBtn=defaultPagePath+'headerPageForSMSOperation.html';
 		 var pageRef=defaultPagePath+'eWalletOptions.html';
 			j(document).ready(function() {
 				j('#mainHeader').load(headerBackBtn);
@@ -3003,8 +2990,8 @@ j.ajax({
 	 }
 
 function viewMessages(){
-    var pageRef=defaultPagePath+'fairMessageTable.html';
     var headerBackBtn=defaultPagePath+'headerPageForBEOperation.html';
+    var pageRef=defaultPagePath+'fairMessageTable.html';
 	j(document).ready(function() {	
 		j('#mainHeader').load(headerBackBtn);
 		j('#mainContainer').load(pageRef);
@@ -3034,10 +3021,11 @@ function fetchMessages(smsBodyString) {
 	var smsAmount = smsAmountResult.split("#");
 	var smsDate = smsSentDate.split("_");
 	for (var i = 0; i < smsBody.length-1; i++) {
+		var tempDate = getFormattedDateFromMillisec(smsDate[i]);
 		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
 		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(smsBody[i]).appendTo(rowss);
 		j(rowss).append('<td><input type = "text"  id = "amt_'+i+'" value= "'+smsAmount[i]+'" style = "width: 88px;"/></td>');
-		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(getFormattedDateFromMillisec(smsDate[i])).appendTo(rowss);
+		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(tempDate).appendTo(rowss);
 		j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_'+i+'" style = "height: 20px; width: 20px;"/></td>');
 
 	}		
@@ -3054,52 +3042,60 @@ function fetchMessages(smsBodyString) {
 
     return thetoday+"-"+months[(themonth-1)]+"-"+theyear;
 }
+
 function abc(e){
-	alert("triiger");
 	var data = e.data;
 	smsList.push( data );
-	alert(data);
-	alert("smsList  "+smsList);
    	saveSMS(data);     
-	alert("save successfull");
 }
-function restoreAllSMS() {
-    		
-        	if(SMS) SMS.restoreSMS(smsList, function( n ){
-        		// clear the list if restore successfully
-        		smsList.length = 0;
-        		updateStatus(updateStrForSMS+ n + ' sms messages restored');
-        		
-        	}, function(err){
-        		updateStatus(updateStrForSMS +'error restore sms: ' + err);
-        	});
-        }
-        function startWatch() {
-        		if(SMS) SMS.startWatch(function(){
+
+function startWatch() {
+        	if(SMS) SMS.startWatch(function(){
         			//smsWatchFlagStatus = true;
-        			alert(updateStrForSMS+'watching started'); 
+        			//alert(updateStrForSMS+'watching started'); 
         	}, function(){
         		//smsWatchFlagStatus = false ;
-        		alert(updateStrForSMS+'failed to start watching');
+        		//alert(updateStrForSMS+'failed to start watching');
         	});
-        }
-        function stopWatch() {
-        	if(SMS) SMS.stopWatch(function(){
-        		update(updateStrForSMS+'watching', 'watching stopped');
-        	}, function(){
-        		updateStatus(updateStrForSMS+'failed to stop watching');
-        	});
-        }
-        
-        function toggleIntercept() {
-        	interceptEnabled = ! interceptEnabled;
-        	
-        	if(interceptEnabled) { // clear the list before we start intercept
-        		smsList.length = 0;
-        	}
-        	
-        	if(SMS) SMS.enableIntercept(interceptEnabled, function(){}, function(){});
-        	
-        	$('span#intercept').text( 'intercept ' + (interceptEnabled ? 'ON' : 'OFF') );
-        	$('button#enable_intercept').text( interceptEnabled ? 'Disable' : 'Enable' );
-        }
+}
+
+function parseIncomingSMSForAmount(input){
+	var amount= "";
+	if(input.includes("Rs.")){
+        var msg = input.split("Rs.")
+
+        var test  =  msg[1];
+		var rsExtractStr = test.trim().split(" ");
+		amount = rsExtractStr[0];
+	}
+	return amount;
+}
+
+function operationsOnSMS(){
+	j(document).ready(function(){
+		       j('#discard').on('click', function(e){ 
+
+				  if(requestRunning){
+						  	return;
+	    					}
+					  if(j("#source tr.selected").hasClass("selected")){
+						  j("#source tr.selected").each(function(index, row) {
+							  var smsID = j(this).find('td.smsId').text();
+							  var jsonFindBE = new Object();
+							  var sentDate = j(this).find('td.smsSentDate').text();
+							  var sender = j(this).find('td.senderAddr').text();
+							  var message = j(this).find('td.smsText').text();
+							  var expAmount = j(this).find('td.amt').text();
+							  var currentDate=new Date(sentDate);
+  							  if(smsID != "" ){
+  							  	discardMessages(smsID);
+  							  }
+	  						  requestRunning = true;
+						  });
+					  }else{
+						 alert("Tap and select messages for save.");
+					  }
+			});
+
+	});
+}

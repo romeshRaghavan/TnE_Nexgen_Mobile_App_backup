@@ -153,7 +153,7 @@ if (window.openDatabase) {
                 t.executeSql("CREATE TABLE IF NOT EXISTS advanceType (advancetypeID INTEGER PRIMARY KEY ASC, advancetype TEXT)");
                 t.executeSql("CREATE TABLE IF NOT EXISTS employeeAdvanceDetails (empAdvID INTEGER PRIMARY KEY ASC, emplAdvVoucherNo TEXT,empAdvTitle TEXT,Amount Double)");
                 t.executeSql("CREATE TABLE IF NOT EXISTS currencyConversionMst (currencyCovId INTEGER PRIMARY KEY ASC, currencyId INTEGER REFERENCES currencyMst(currencyId), defaultcurrencyId INTEGER ,conversionRate Double)");
-		t.executeSql("CREATE TABLE IF NOT EXISTS smsMaster (smsId INTEGER PRIMARY KEY ASC, smsText TEXT,senderAddr TEXT,smsSentDate TEXT)");
+		t.executeSql("CREATE TABLE IF NOT EXISTS smsMaster (smsId INTEGER PRIMARY KEY ASC, smsText TEXT,senderAddr TEXT,smsSentDate TEXT,smsAmount TEXT)");
     });
 } else {
     alert("WebSQL is not supported by your browser!");
@@ -1871,12 +1871,12 @@ function deleteSelectedEmplAdv(employeeAdvDetailId){
 function saveSMS(sms){
 	j('#loading_Cat').show();
 	if (mydb) {
-		//get the values of the SMS
+		//save incoming sms
     var smsMsg = sms.body;
 	var senderAddress = sms.address;		
 	var smsSentDate = getFormattedDateFromMillisec(sms.date_sent);
-	//if((senderAddress.includes("paytm") || senderAddress.includes("PAYTM") || senderAddress.includes("Paytm"))
-	//	&&(smsMsg.includes("successful") && !(smsMsg.includes("successfully")))) {
+	if((senderAddress.includes("paytm") || senderAddress.includes("PAYTM") || senderAddress.includes("Paytm"))
+		&&(smsMsg.includes("successful") && !(smsMsg.includes("successfully")))) {
 		if (smsMsg != "") {
 	            mydb.transaction(function (t) {
 	                t.executeSql("INSERT INTO smsMaster (smsText,senderAddr,smsSentDate) VALUES (?,?,?)", 
@@ -1887,15 +1887,14 @@ function saveSMS(sms){
 	        	j('#loading_Cat').hide();
 	            alert("You must enter inputs!");
 	        }
-   // }
+   }
 	} else {
         alert("db not found, your browser does not support web sql!");
     }
 }
 
 
-function fetchsmsClaim() {
-	
+function fetchSMSClaim() {
 	mytable = j('<table></table>').attr({ id: "source",class: ["table","table-striped","table-bordered"].join(' ') });
 	var rowThead = j("<thead></thead>").appendTo(mytable);
 	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
@@ -1903,33 +1902,38 @@ function fetchsmsClaim() {
 	j('<th></th>').text("SMS Date").appendTo(rowTh);
 	j('<th></th>').text("Sender").appendTo(rowTh); 	
 	j('<th></th>').text("Text").appendTo(rowTh);
-	//j('<th></th>').text("Amt").appendTo(rowTh);
+	j('<th></th>').text("Amt").appendTo(rowTh);
 	var cols = new Number(5);
 	 
 	mydb.transaction(function(t) {
+		 mydb.transaction(function (t) {
+	              t.executeSql("INSERT INTO smsMaster (smsId,smsSentDate,senderAddr,smsText,smsAmount) VALUES (?, ?, ?, ?,?)", 
+											[1,"23-DEC-2016","VM_IPAYTM","PAID Rs.100 ","100.00"]);
+				});
 		var headerOprationBtn;
       t.executeSql('SELECT * FROM smsMaster;', [],
 		 function(transaction, result) {
 		  if (result != null && result.rows != null) {
 			  
 			for (var i = 0; i < result.rows.length; i++) {
-				
 				var row = result.rows.item(i);
+				var smsAmount = parseIncomingSMSForAmount(row.smsText);
 				var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
-				//var newDateFormat = reverseConvertDate(row.expDate.substring(0,2))+"-"+row.expDate.substring(3,5)+" "+row.expDate.substring(6,10); 
 				j('<td></td>').attr({ class: ["smsSentDate",""].join(' ') }).text(row.smsSentDate).appendTo(rowss);
 				j('<td></td>').attr({ class: ["senderAddr",""].join(' ') }).text(row.senderAddr).appendTo(rowss);
 				j('<td></td>').attr({ class: ["smsText",""].join(' ') }).text(row.smsText).appendTo(rowss);
+				j(rowss).append('<td><input type = "text"  id = "amt" value= "'+ smsAmount +'" style = "width: 50px;"/></td>');
+				j('<td></td>').attr({ class: ["smsId","displayNone"].join(' ') }).text(row.smsId).appendTo(rowss);
 			}	
 					
 			j("#source tr").click(function(){ 
-				headerOprationBtn = defaultPagePath+'headerPageForBEOperation.html';
+				headerOprationBtn = defaultPagePath+'headerPageForSMSOperation.html';
 				if(j(this).hasClass("selected")){ 
-				var headerBackBtn=defaultPagePath+'headerPageForBEOperation.html';
+				var headerBackBtn=defaultPagePath+'headerPageForSMSOperation.html';
 					j(this).removeClass('selected');
 					j('#mainHeader').load(headerBackBtn);
 				}else{
-				if(j(this).text()=='DateExpense NameNarration From/To LocAmt'){
+				if(j(this).text()=='DateExpense expid From/To LocAmt'){
 					
 				}else{
 					j('#mainHeader').load(headerOprationBtn);
@@ -1942,3 +1946,10 @@ function fetchsmsClaim() {
 	 });	 
 	 mytable.appendTo("#box");		 
  }	
+
+
+function discardMessages(smsID){
+			mydb.transaction(function (t) {
+				t.executeSql("DELETE FROM smsMaster WHERE smsId=?", [smsID]);
+			});
+		}

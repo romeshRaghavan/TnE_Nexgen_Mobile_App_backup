@@ -2550,14 +2550,14 @@ function hideEAMenus(){
 
 function hideEmployeeAdvance(){
 	if(window.localStorage.getItem("EaInMobile") == "true"){
-       fetchsmsClaim();
+        fetchEmployeeAdvance();
         document.getElementById('helpimage').style.display="";
 		//document.getElementById('EA').style.display="";
 	}else{
-        fetchsmsClaim();
+        fetchExpenseClaim();
         document.getElementById('helpimage').style.display="none";
 		document.getElementById('EA').style.display="none";
-	}
+}
 }
 
 

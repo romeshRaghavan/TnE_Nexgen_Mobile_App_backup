@@ -30,7 +30,7 @@ var smsBodyString = "";
 var smsToExpenseStr = "" ;
 var smsWatchFlagStatus = false;
 var expensePageFlag = '';		//S for smsExpenses And N for normal expenses
-
+var filtersStr = "";
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
 	
@@ -72,9 +72,7 @@ function login()
                  	  
 			  setUserStatusInLocalStorage("Valid");
 			  setUserSessionDetails(data,jsonToBeSend);
-                            // if(smsWatchFlagStatus = false){
-                  startWatch();         
-			//  }
+
                 if(data.hasOwnProperty('EaInMobile') && 
                  data.EaInMobile != null){
                   if(data.EaInMobile){
@@ -117,7 +115,7 @@ function commanLogin(){
 	var jsonToDomainNameSend = new Object();
 	jsonToDomainNameSend["userName"] = domainName;
 	jsonToDomainNameSend["mobilePlatform"] = device.platform;
-	//jsonToDomainNameSend["mobilePlatform"] = "Android";
+	// jsonToDomainNameSend["mobilePlatform"] = "Android";
   	//var res=JSON.stringify(jsonToDomainNameSend);
 	var requestPath = WebServicePath;
 	j.ajax({
@@ -2886,6 +2884,7 @@ j.ajax({
 	 }
 
 function viewMessages(){
+	// console.log("viewMessages  "+filtersStr)
     var headerBackBtn=defaultPagePath+'headerPageForBEOperation.html';
     var pageRef=defaultPagePath+'fairMessageTable.html';
 	j(document).ready(function() {	
@@ -2911,11 +2910,13 @@ function viewMessages(){
 }
 
 function saveIncomingSMSOnLocal(e){
-	var sms = e.data;
+	var sms ={"address": "paytm", "body":"You have made payment of Rs.135.00 to om rest.", "date_sent":1482401219880};
 	smsList.push(sms);
+	// console.log(sms);
 	var senderAddress = ""+sms.address;	
 	senderAddress = senderAddress.toLowerCase();
 	if(senderAddress.includes("paytm") || senderAddress.includes("freecharge")){
+		// console.log("inside if condition")
 		if(smsFilterBox(sms.body))
 			saveSMS(sms);     
 	}
@@ -3008,7 +3009,7 @@ function smsFilterBox(smsText){
 		var word= blockedWords[i].toLowerCase();
 		//console.log("blockedWords  "+word)
 		if(smsText.includes(word)){
-			//console.log("blockedWord included "+word)
+			// console.log("blockedWord included "+word)
 			blockedFlag = true;
 			break;
 		}
@@ -3019,7 +3020,7 @@ function smsFilterBox(smsText){
 			var word = allowedWords[i].toLowerCase();
 			//console.log("allowed  "+word)
 			if(smsText.includes(word)){
-				//console.log("allowed included "+word)
+				// console.log("allowed included "+word)
 				returnFlag = true;
 				break;
 			}

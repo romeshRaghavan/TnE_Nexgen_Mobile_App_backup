@@ -1906,10 +1906,10 @@ function fetchSMSClaim() {
 	var cols = new Number(5);
 	 
 	mydb.transaction(function(t) {
-		 mydb.transaction(function (t) {
+/*		 mydb.transaction(function (t) {
 	              t.executeSql("INSERT INTO smsMaster (smsId,smsSentDate,senderAddr,smsText,smsAmount) VALUES (?, ?, ?, ?,?)", 
 											[1,"23-Dec-2016","VM_IPAYTM","successfully  Rs.600 ","600.00"]);
-				});
+				});*/
 		var headerOprationBtn;
       t.executeSql('SELECT * FROM smsMaster;', [],
 		 function(transaction, result) {

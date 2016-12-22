@@ -27,14 +27,15 @@ var requestRunning = false;
 var flagForUnitEnable = false;
 var smsList = [];     
 var smsBodyString = "";  
-var updateStrForSMS = "" ;
+var smsToExpenseStr = "" ;
 var smsWatchFlagStatus = false;
- var interceptEnabled = false;// For SMS Reading purpose
+var expensePageFlag = '';		//S for smsExpenses And N for normal expenses
+
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
 	
  document.addEventListener('onSMSArrive',function(e){
-			 	abc(e);
+			 	saveIncomingSMSOnLocal(e);
 			 },false);
 });
 
@@ -86,6 +87,8 @@ function login()
 				synchronizeTRForTS();  
 			  }
                 synchronizeBEMasterData();
+		synchronizeWhiteListMasterData();
+                startWatch();
 			}else if(data.Status == 'Failure'){
  			   successMessage = data.Message;
 			   if(successMessage.length == 0){
@@ -519,11 +522,17 @@ function createExpNameDropDown(jsonExpNameArr){
 		}
 	}
 	
-	document.getElementById("expFromLoc").value = "";
-	document.getElementById("expToLoc").value = "";
-	document.getElementById("expNarration").value = "";
-	document.getElementById("expUnit").value = "";
-	document.getElementById("expAmt").value = "";
+	if(expensePageFlag == "N"){
+		document.getElementById("expFromLoc").value = "";
+		document.getElementById("expToLoc").value = "";
+		document.getElementById("expNarration").value = "";
+		document.getElementById("expUnit").value = "";
+		document.getElementById("expAmt").value = "";
+	}else if(expensePageFlag == "S"){
+		document.getElementById("expFromLoc").value = "";
+		document.getElementById("expToLoc").value = "";
+	}
+
 	$("a").click(function () { 
 		$("#mapLink").fadeTo("fast").removeAttr("href"); 
 	});
@@ -1308,6 +1317,72 @@ function setPerUnitDetails(transaction, results){
 						}
 						else{
 							document.getElementById("expUnit").disabled =false;
+function setPerUnitDetails(transaction, results){
+    	if(results!=null){
+		        var row = results.rows.item(0);
+		        perUnitDetailsJSON["expenseIsfromAndToReqd"]=row.expIsFromToReq;
+		        perUnitDetailsJSON["isUnitReqd"]=row.expIsUnitReq;
+		        perUnitDetailsJSON["expRatePerUnit"]=row.expRatePerUnit;
+		        perUnitDetailsJSON["expFixedOrVariable"]=row.expFixedOrVariable;
+		        perUnitDetailsJSON["expFixedLimitAmt"]=row.expFixedLimitAmt;
+		        perUnitDetailsJSON["expenseName"]=row.expName;
+				perUnitDetailsJSON["expPerUnitActiveInative"]=row.expPerUnitActiveInative;
+				perUnitDetailsJSON["isErReqd"]=row.isErReqd;
+				perUnitDetailsJSON["limitAmountForER"]=row.limitAmountForER;
+				if(expensePageFlag == "N"){
+					document.getElementById("ratePerUnit").value = row.expRatePerUnit;
+					document.getElementById("expFromLoc").value = "";
+					document.getElementById("expToLoc").value = "";
+					document.getElementById("expUnit").value = "";
+					document.getElementById("expNarration").value = "";
+					document.getElementById("expAmt").value = "";
+				}else if (expensePageFlag == "S"){
+					document.getElementById("ratePerUnit").value = row.expRatePerUnit;
+					document.getElementById("expFromLoc").value = "";
+					document.getElementById("expToLoc").value = "";
+				}
+		        if(perUnitDetailsJSON.expenseIsfromAndToReqd=='N'){
+					document.getElementById("expFromLoc").value="";
+					document.getElementById("expToLoc").value="";
+					document.getElementById("expFromLoc").disabled =true;
+					document.getElementById("expToLoc").disabled =true;
+					document.getElementById("expFromLoc").style.backgroundColor='#d1d1d1'; 
+					document.getElementById("expToLoc").style.backgroundColor='#d1d1d1';
+					document.getElementById("expNarration").disabled =false;
+					document.getElementById("expNarration").style.backgroundColor='#FFFFFF';
+					document.getElementById("mapImage").style.display= "none";
+				}else{
+					document.getElementById("expFromLoc").disabled =false;
+					document.getElementById("expToLoc").disabled =false;
+					document.getElementById("expFromLoc").value="";
+					document.getElementById("expToLoc").value="";
+					if(expensePageFlag == "N"){
+						document.getElementById("expNarration").value="";
+					}
+					document.getElementById("expFromLoc").style.backgroundColor='#FFFFFF'; 
+					document.getElementById("expToLoc").style.backgroundColor='#FFFFFF'; 
+					//alert(window.localStorage.getItem("MobileMapRole"))
+					if(window.localStorage.getItem("MobileMapRole") == 'true') 
+					{
+						attachGoogleSearchBox(document.getElementById("expFromLoc"));
+						attachGoogleSearchBox(document.getElementById("expToLoc"));
+						document.getElementById("mapImage").style.display="";
+						document.getElementById("expNarration").disabled =true;
+						document.getElementById("expNarration").style.backgroundColor='#d1d1d1';
+					} 
+				}
+				if(perUnitDetailsJSON.isUnitReqd=='Y'){
+					if(expensePageFlag == "N"){
+						document.getElementById("expAmt").value="";
+					}
+					if(perUnitDetailsJSON.expFixedOrVariable=='V'){
+						flagForUnitEnable = true;
+						if(perUnitDetailsJSON.expenseIsfromAndToReqd=='Y' && window.localStorage.getItem("MobileMapRole") == 'true'){
+							document.getElementById("expUnit").disabled =true;
+							document.getElementById("expUnit").style.backgroundColor='#d1d1d1';
+						}
+						else{
+							document.getElementById("expUnit").disabled =false;
 							document.getElementById("expUnit").style.backgroundColor='#FFFFFF';
 						}
 						document.getElementById("expAmt").disabled =false;
@@ -1339,6 +1414,12 @@ function setPerUnitDetails(transaction, results){
 					document.getElementById("expAmt").style.backgroundColor='#FFFFFF'; 
 					document.getElementById("expUnit").style.backgroundColor='#d1d1d1';
 				}
+
+				if (expensePageFlag == "S"){
+					// console.log("checkPerUnitExceptionStatusForBEAtLineLevel called from expense name change")
+					checkPerUnitExceptionStatusForBEAtLineLevel();
+				};
+
 		}else{
 
 			alert("Please Synch your expense Names to claim expense.");
@@ -2846,139 +2927,13 @@ j.ajax({
         	if (! SMS ) { alert( 'SMS plugin not ready' ); return; }
         	updateStatus('SMS count: ' + smsList.length );
             document.addEventListener('onSMSArrive',function(e){
- 				abc(e);
+ 				saveIncomingSMSOnLocal(e);
 			 },false);
             alert('end of init' );
         }   
 
 
-	 function update( id, str ) {
-        	$('div#' + id).html( str );
-        }
-        function updateStatus( str ) {
-        	$('div#status').html( str );
-        }
-        function updateData( str ) {
-        	$('div#data').html( str );
-        }
-
-    
-
-       function listSMS() {
-    		updateData('');
-    		
- 			var filter = {
-                box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
-                // following 4 filters should NOT be used together, they are OR relationship
-              //address : 'VK-iPaytm', 
-				 read : 0,
-              body : 'MUMBAIMETRO',
-                // following 2 filters can be used to list page up/down
-                indexFrom : 0, // start from index 0
-            };
-        	if(SMS) SMS.listSMS(filter, function(data){
-    			updateStatus('sms listed as json array');
-    			//updateData( JSON.stringify(data) );
-    			
-    			var html = "";
-        		if(Array.isArray(data)) {
-        			for(var i in data) {
-        				var sms = data[i];
-        				smsList.push(sms);
-        				html += sms.address + ": " + sms.body + "<br/>";
-        			}
-        		}
-        		updateData( html );
-        		
-        	}, function(err){
-        		updateStatus('error list sms: ' + err);
-        	});
-        }
-        function listSMSfilter() {
-    		updateData('');
-    		
- 			var filter = {
-                box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
-                // following 4 filters should NOT be used together, they are OR relationship
-                read : 0,
-              //address : 'VK-iPaytm', 
-              //body : 'paytm',
-                // following 2 filters can be used to list page up/down
-                indexFrom : 0, // start from index 0
-            };
-        	if(SMS) SMS.listSMS(filter, function(data){
-    			updateStatus('sms listed as json array');
-    			//updateData( JSON.stringify(data) );
-    			
-    			var html = "";
-        		if(Array.isArray(data)) {
-        			for(var i in data) {
-        				var sms = data[i];
-        				smsList.push(sms);
-        				html += sms.address + ": " + sms.body + "<br/>";
-        			}
-        		}
-        		updateData( html );
-        		
-        	}, function(err){
-        		updateStatus('error list sms: ' + err);
-        	});
-        }
-	var listOfMsg = [] ;
-	function listSMSsenderfilter() {
-		smsBodyString= "";
- 			var filter = {
-                box : 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
-	              address : 'VM-IPAYTM', 
-                indexFrom : 0, // start from index 0
-            };
-        	if(SMS) SMS.listSMS(filter, function(data){
-    			var html = "";
-    			var testDate ="";
-        		if(Array.isArray(data)) {
-        			for(var i in data) {
-        				var sms = data[i];
-        				smsList.push(sms);
-        				var smsMsg = sms.body;
-        				var smsDate = sms.date_sent;
-        				if(smsMsg.includes("successful") && !(smsMsg.includes("successfully"))){
-        					html += sms.address + ": " + sms.body + "<br/><br/>";
-        					smsBodyString += sms.body+"$";
-        					testDate += smsDate + "_";
-        				}if(smsMsg.includes("You paid")){
-        					html += sms.address + ": " + sms.body + "<br/><br/>";
-        					smsBodyString += sms.body+"$";
-        					testDate += smsDate + "_";
-        				}
-        			}
-        		}
-        		smsBodyString = smsBodyString + "@" + testDate;
-			parseMessages(smsBodyString);
-        	}, function(err){
-        		//updateStatus('error list sms: ' + err);
-        	});
-        }
-         
-
-         function parseMessages(smsBodyString){
-        	var aa = smsBodyString.split("$");
-        	var html = "";
-        	
-        	for(var i = 0; i<aa.length-1;i++){
-        		var temp = aa[i];
-        		if(temp.includes("Rs.")){
-        			var msg = temp.split("Rs.")
-        			var test  =  msg[1];
-          
-        			var rsExtractStr = test.trim().split(" ");
-          
-        			html += ""+rsExtractStr[0]+"#";
-        		}
-        	}
-        	smsBodyString = smsBodyString + "@" + html;
-		 fetchMessages(smsBodyString);
-	 }
-      function createEWallet(){
+	       function createEWallet(){
 		 
 		 var headerBackBtn=defaultPagePath+'headerPageForSMSOperation.html';
 		 var pageRef=defaultPagePath+'eWalletOptions.html';
@@ -3001,52 +2956,28 @@ function viewMessages(){
 }
 
 
-function fetchMessages(smsBodyString) {
-	mytable = j('<table></table>').attr({ id: "source",class: ["table","table-striped","table-bordered"].join(' ') });
-	
-	var rowThead = j("<thead></thead>").appendTo(mytable);
-	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
-	
-	j('<th></th>').text("Message Details").appendTo(rowTh);
-	j('<th></th>').text("Amount").appendTo(rowTh);
-	j('<th></th>').text("Date").appendTo(rowTh);
-	j('<th></th>').text("Checkbox").appendTo(rowTh);
-	var cols = new Number(3);
 
-	var result = smsBodyString.split("@");
-	var smsBodyResult = result[0];
-	var smsSentDate = result[1];
-	var smsAmountResult = result[2];
-	var smsBody = smsBodyResult.split("$");
-	var smsAmount = smsAmountResult.split("#");
-	var smsDate = smsSentDate.split("_");
-	for (var i = 0; i < smsBody.length-1; i++) {
-		var tempDate = getFormattedDateFromMillisec(smsDate[i]);
-		var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
-		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(smsBody[i]).appendTo(rowss);
-		j(rowss).append('<td><input type = "text"  id = "amt_'+i+'" value= "'+smsAmount[i]+'" style = "width: 88px;"/></td>');
-		j('<td></td>').attr({ class: ["msgDetails"].join(' ') }).text(tempDate).appendTo(rowss);
-		j(rowss).append('<td><input type = "checkbox"  id = "chkBoxId_'+i+'" style = "height: 20px; width: 20px;"/></td>');
-
-	}		
-	mytable.appendTo("#box");	 
- }
 
  function getFormattedDateFromMillisec(input){
     
 	var time = new Date(input);
-	var theyear=time.getFullYear()
-	var themonth=time.getMonth()+1
-	var thetoday=time.getDate()
+	var theyear=time.getFullYear();
+	var themonth=time.getMonth()+1;
+	var thetoday=time.getDate();
     var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
     return thetoday+"-"+months[(themonth-1)]+"-"+theyear;
 }
 
-function abc(e){
-	var data = e.data;
-	smsList.push( data );
-   	saveSMS(data);     
+function saveIncomingSMSOnLocal(e){
+	var sms = e.data;
+	smsList.push(sms);
+	var senderAddress = ""+sms.address;	
+	senderAddress = senderAddress.toLowerCase();
+	if(senderAddress.includes("paytm") || senderAddress.includes("freecharge")){
+		if(smsFilterBox(sms.body))
+			saveSMS(sms);     
+	}
 }
 
 function startWatch() {
@@ -3074,23 +3005,20 @@ function parseIncomingSMSForAmount(input){
 function operationsOnSMS(){
 	j(document).ready(function(){
 		       j('#discard').on('click', function(e){ 
-
 				  if(requestRunning){
 						  	return;
 	    					}
+	    			  var pageRef=defaultPagePath+'fairMessageTable.html';
 					  if(j("#source tr.selected").hasClass("selected")){
 						  j("#source tr.selected").each(function(index, row) {
+						  	requestRunning = true;
 							  var smsID = j(this).find('td.smsId').text();
-							  var jsonFindBE = new Object();
-							  var sentDate = j(this).find('td.smsSentDate').text();
-							  var sender = j(this).find('td.senderAddr').text();
-							  var message = j(this).find('td.smsText').text();
-							  var expAmount = j(this).find('td.amt').text();
-							  var currentDate=new Date(sentDate);
-  							  if(smsID != "" ){
   							  	discardMessages(smsID);
-  							  }
-	  						  requestRunning = true;
+  							  	 j('#mainContainer').load(pageRef);
+  							  	 var SMSSuccessMsgForDelete="message/s deleted successfully.";
+								 document.getElementById("syncSuccessMsg").innerHTML = SMSSuccessMsgForDelete;
+								 j('#syncSuccessMsg').hide().fadeIn('slow').delay(3000).fadeOut('slow');
+								 requestRunning = false;
 						  });
 					  }else{
 						 alert("Tap and select messages for save.");
@@ -3098,4 +3026,72 @@ function operationsOnSMS(){
 			});
 
 	});
+
+	j('#saveSMS').on('click', function(e){ 
+				  if(requestRunning){
+						  	return;
+	    					}
+	    			  var pageRef=defaultPagePath+'smsToExpense.html';
+					  if(j("#source tr.selected").hasClass("selected")){
+						  j("#source tr.selected").each(function(index, row) {
+						  	requestRunning = true;
+							  var smsID = j(this).find('td.smsId').text();
+							  var smsText = j(this).find('td.smsText').text();
+							  var smsSentDate = j(this).find('td.smsSentDate').text();
+							  var smsAmount = j(this).find('td.smsAmount').text();
+							 	smsToExpenseStr = smsID+"_"+smsText+"_"+smsSentDate	+"_"+smsAmount;
+  							  	 j('#mainContainer').load(pageRef);
+  							   	//  console.log("inside of save header btn click mthd "+smsToExpenseStr)
+  								//  var SMSSuccessMsgForDelete="message/s deleted successfully.";
+								 // document.getElementById("syncSuccessMsg").innerHTML = SMSSuccessMsgForDelete;
+								 // j('#syncSuccessMsg').hide().fadeIn('slow').delay(3000).fadeOut('slow');
+								 requestRunning = false;
+						  });
+					  }else{
+						 alert("Tap and select messages for save.");
+					  }
+	});
+}
+
+function smsFilterBox(smsText){
+	//var filtersStr = getFiltrationConstraints();
+	//console.log("filtersStr  "+filtersStr)
+	var blockedWordsStr = filtersStr.split("@")[0];
+	var allowedWordsStr = filtersStr.split("@")[1];
+	var returnFlag = false;
+	var blockedFlag = false;
+	var blockedWords = blockedWordsStr.split("$");
+	smsText = smsText.toLowerCase();
+
+	for (var i = 0; i < blockedWords.length-1; i++) {
+		var word= blockedWords[i].toLowerCase();
+		//console.log("blockedWords  "+word)
+		if(smsText.includes(word)){
+			//console.log("blockedWord included "+word)
+			blockedFlag = true;
+			break;
+		}
+	}
+	if(!blockedFlag){
+		var allowedWords = allowedWordsStr.split("$");
+		for (var i = 0; i < allowedWords.length-1; i++) {
+			var word = allowedWords[i].toLowerCase();
+			//console.log("allowed  "+word)
+			if(smsText.includes(word)){
+				//console.log("allowed included "+word)
+				returnFlag = true;
+				break;
+			}
+		}
+	}else{
+		returnFlag = false;
+	}
+	return returnFlag;
+}
+
+function getExpenseDateFromSMS(input){
+	// converts date from dd-MMM-yyyy to mm/dd/yyyy 
+	var date = new Date(input);
+
+	return (date.getMonth()+1)+"/"+date.getDate()+"/"+date.getFullYear();
 }

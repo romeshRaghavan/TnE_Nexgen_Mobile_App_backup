@@ -87,7 +87,7 @@ function login()
 				synchronizeTRForTS();  
 			  }
                 synchronizeBEMasterData();
-		synchronizeWhiteListMasterData();
+				synchronizeWhiteListMasterData();
                 startWatch();
 			}else if(data.Status == 'Failure'){
  			   successMessage = data.Message;
@@ -1257,66 +1257,6 @@ function onloadTimePicker(){
 	     getCategoryFromDB(modeID);
 	 }
 
-
-function setPerUnitDetails(transaction, results){
- 		 
-    	if(results!=null){
-		        var row = results.rows.item(0);
-		        perUnitDetailsJSON["expenseIsfromAndToReqd"]=row.expIsFromToReq;
-		        perUnitDetailsJSON["isUnitReqd"]=row.expIsUnitReq;
-		        perUnitDetailsJSON["expRatePerUnit"]=row.expRatePerUnit;
-		        perUnitDetailsJSON["expFixedOrVariable"]=row.expFixedOrVariable;
-		        perUnitDetailsJSON["expFixedLimitAmt"]=row.expFixedLimitAmt;
-		        perUnitDetailsJSON["expenseName"]=row.expName;
-				perUnitDetailsJSON["expPerUnitActiveInative"]=row.expPerUnitActiveInative;
-				perUnitDetailsJSON["isErReqd"]=row.isErReqd;
-				perUnitDetailsJSON["limitAmountForER"]=row.limitAmountForER;
-			document.getElementById("ratePerUnit").value = row.expRatePerUnit;
-		        document.getElementById("expAmt").value="";
-		        document.getElementById("expUnit").value="";
-			document.getElementById("expFromLoc").value = "";
-			document.getElementById("expToLoc").value = "";
-			document.getElementById("expNarration").value = "";
-			document.getElementById("expUnit").value = "";
-			document.getElementById("expAmt").value = "";
-		        if(perUnitDetailsJSON.expenseIsfromAndToReqd=='N'){
-					document.getElementById("expFromLoc").value="";
-					document.getElementById("expToLoc").value="";
-					document.getElementById("expFromLoc").disabled =true;
-					document.getElementById("expToLoc").disabled =true;
-					document.getElementById("expFromLoc").style.backgroundColor='#d1d1d1'; 
-					document.getElementById("expToLoc").style.backgroundColor='#d1d1d1';
-					document.getElementById("expNarration").disabled =false;
-					document.getElementById("expNarration").style.backgroundColor='#FFFFFF';
-					document.getElementById("mapImage").style.display= "none";
-				}else{
-					document.getElementById("expFromLoc").disabled =false;
-					document.getElementById("expToLoc").disabled =false;
-					document.getElementById("expFromLoc").value="";
-					document.getElementById("expToLoc").value="";
-					document.getElementById("expNarration").value="";
-					document.getElementById("expFromLoc").style.backgroundColor='#FFFFFF'; 
-					document.getElementById("expToLoc").style.backgroundColor='#FFFFFF'; 
-					//alert(window.localStorage.getItem("MobileMapRole"))
-					if(window.localStorage.getItem("MobileMapRole") == 'true') 
-					{
-						attachGoogleSearchBox(document.getElementById("expFromLoc"));
-						attachGoogleSearchBox(document.getElementById("expToLoc"));
-						document.getElementById("mapImage").style.display="";
-						document.getElementById("expNarration").disabled =true;
-						document.getElementById("expNarration").style.backgroundColor='#d1d1d1';
-					} 
-				}
-				if(perUnitDetailsJSON.isUnitReqd=='Y'){
-					document.getElementById("expAmt").value="";
-					if(perUnitDetailsJSON.expFixedOrVariable=='V'){
-						flagForUnitEnable = true;
-						if(perUnitDetailsJSON.expenseIsfromAndToReqd=='Y' && window.localStorage.getItem("MobileMapRole") == 'true'){
-							document.getElementById("expUnit").disabled =true;
-							document.getElementById("expUnit").style.backgroundColor='#d1d1d1';
-						}
-						else{
-							document.getElementById("expUnit").disabled =false;
 function setPerUnitDetails(transaction, results){
     	if(results!=null){
 		        var row = results.rows.item(0);
@@ -1426,6 +1366,7 @@ function setPerUnitDetails(transaction, results){
 		}
  	
  	}
+
 
  	function setModeCategroyDetails(transaction, results){
  	

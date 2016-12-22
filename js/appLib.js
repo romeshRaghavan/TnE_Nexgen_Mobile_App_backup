@@ -154,6 +154,7 @@ if (window.openDatabase) {
                 t.executeSql("CREATE TABLE IF NOT EXISTS employeeAdvanceDetails (empAdvID INTEGER PRIMARY KEY ASC, emplAdvVoucherNo TEXT,empAdvTitle TEXT,Amount Double)");
                 t.executeSql("CREATE TABLE IF NOT EXISTS currencyConversionMst (currencyCovId INTEGER PRIMARY KEY ASC, currencyId INTEGER REFERENCES currencyMst(currencyId), defaultcurrencyId INTEGER ,conversionRate Double)");
 		t.executeSql("CREATE TABLE IF NOT EXISTS smsMaster (smsId INTEGER PRIMARY KEY ASC, smsText TEXT,senderAddr TEXT,smsSentDate TEXT,smsAmount TEXT)");
+		t.executeSql("CREATE TABLE IF NOT EXISTS smsScrutinizerMst (ID INTEGER PRIMARY KEY ASC, filterText TEXT, filterFlag TEXT, status TEXT)");
     });
 } else {
     alert("WebSQL is not supported by your browser!");
@@ -1868,26 +1869,25 @@ function deleteSelectedEmplAdv(employeeAdvDetailId){
 
 //  sms changes
 
+
 function saveSMS(sms){
 	j('#loading_Cat').show();
 	if (mydb) {
 		//save incoming sms
-    var smsMsg = sms.body;
-	var senderAddress = sms.address;		
-	var smsSentDate = getFormattedDateFromMillisec(sms.date_sent);
-	if((senderAddress.includes("paytm") || senderAddress.includes("PAYTM") || senderAddress.includes("Paytm"))
-		&&(smsMsg.includes("successful") && !(smsMsg.includes("successfully")))) {
+	    var smsMsg = sms.body;
+		var senderAddress = ""+sms.address;	
+		senderAddress = senderAddress.toLowerCase();	
+		var smsSentDate = getFormattedDateFromMillisec(parseInt(sms.date_sent));
+		var smsAmount = parseIncomingSMSForAmount(smsMsg);
 		if (smsMsg != "") {
 	            mydb.transaction(function (t) {
-	                t.executeSql("INSERT INTO smsMaster (smsText,senderAddr,smsSentDate) VALUES (?,?,?)", 
-												[smsMsg,senderAddress,smsSentDate]);
+	                t.executeSql("INSERT INTO smsMaster (smsText,senderAddr,smsSentDate,smsAmount) VALUES (?,?,?,?)", 
+												[smsMsg,senderAddress,smsSentDate,smsAmount]);
 				});
 	            j('#loading_Cat').hide();
 	        } else {
 	        	j('#loading_Cat').hide();
-	            alert("You must enter inputs!");
 	        }
-   }
 	} else {
         alert("db not found, your browser does not support web sql!");
     }
@@ -1908,7 +1908,7 @@ function fetchSMSClaim() {
 	mydb.transaction(function(t) {
 		 mydb.transaction(function (t) {
 	              t.executeSql("INSERT INTO smsMaster (smsId,smsSentDate,senderAddr,smsText,smsAmount) VALUES (?, ?, ?, ?,?)", 
-											[1,"23-DEC-2016","VM_IPAYTM","PAID Rs.100 ","100.00"]);
+											[1,"23-Dec-2016","VM_IPAYTM","successfully  Rs.600 ","600.00"]);
 				});
 		var headerOprationBtn;
       t.executeSql('SELECT * FROM smsMaster;', [],
@@ -1922,7 +1922,8 @@ function fetchSMSClaim() {
 				j('<td></td>').attr({ class: ["smsSentDate",""].join(' ') }).text(row.smsSentDate).appendTo(rowss);
 				j('<td></td>').attr({ class: ["senderAddr",""].join(' ') }).text(row.senderAddr).appendTo(rowss);
 				j('<td></td>').attr({ class: ["smsText",""].join(' ') }).text(row.smsText).appendTo(rowss);
-				j(rowss).append('<td><input type = "text"  id = "amt" value= "'+ smsAmount +'" style = "width: 50px;"/></td>');
+				j('<td></td>').attr({ class: ["smsAmount",""].join(' ') }).text(row.smsAmount).appendTo(rowss);
+				// j(rowss).append('<td><input type = "text"  id = "amt" value= "'+ smsAmount +'" style = "width: 50px;"/></td>');
 				j('<td></td>').attr({ class: ["smsId","displayNone"].join(' ') }).text(row.smsId).appendTo(rowss);
 			}	
 					
@@ -1953,3 +1954,95 @@ function discardMessages(smsID){
 				t.executeSql("DELETE FROM smsMaster WHERE smsId=?", [smsID]);
 			});
 		}
+
+function getFiltrationConstraints(){
+	var blockedWordsList = 	"";
+	var allowedWordsList = "";
+	mydb.transaction(function(t) {
+		 t.executeSql('SELECT * FROM smsScrutinizerMst;', [],
+		 function(transaction, result) {
+		 	 if (result != null && result.rows != null) {
+			  
+				for (var i = 0; i < result.rows.length; i++) {
+					var row = result.rows.item(i);
+					var status = row.status;
+					var flag = row.filterFlag;
+					var filterText = row.filterText;
+
+					if(status == 1){
+						if(flag == 'b'){
+							blockedWordsList += filterText + "$";
+						}else if( flag == 'w' ){
+							allowedWordsList += filterText + "$"
+						}
+					}
+
+				}
+			}
+		 });
+	});
+	setTimeout(function(){
+		tempFilterStr = blockedWordsList+"@"+allowedWordsList;
+		if(tempFilterStr){
+			filtersStr = tempFilterStr;
+		}
+		return tempFilterStr
+	}, 50);
+}
+
+
+function synchronizeWhiteListMasterData() {
+	var jsonSentToSync=new Object();
+	
+	j('#loading_Cat').show();
+	var blockedWordsList = 	"";
+	var allowedWordsList = "";
+	if (mydb) {
+		j.ajax({
+			url: window.localStorage.getItem("urlPath")+"SyncWhiteListMasterWebService",
+			type: 'POST',
+			dataType: 'json',
+			crossDomain: true,
+			data: JSON.stringify(jsonSentToSync),
+			success: function(data) {
+				if(data.Status=='Success'){
+					mydb.transaction(function (t) {
+					t.executeSql("DELETE FROM smsScrutinizerMst");
+					var whiteListArray = data.WhiteListArray;
+						if(whiteListArray != null && whiteListArray.length > 0){
+							for(var i=0; i<whiteListArray.length; i++ ){
+								var msgArr = new Array();
+								msgArr = whiteListArray[i];
+								var wbl_id = msgArr.ID;
+								var filter_Text = msgArr.FilterText;
+								var filter_Flag = msgArr.FilterFlag;
+								var status = msgArr.Status;
+								 
+								t.executeSql("INSERT INTO smsScrutinizerMst (ID, filterText, filterFlag, status) VALUES (?, ?, ?, ?)", [wbl_id,filter_Text,filter_Flag,status]);
+								
+							}
+						}
+					});	
+					                      
+					j('#loading_Cat').hide(); 
+            		document.getElementById("syncSuccessMsg").innerHTML = "SMS Status Master synchronized successfully.";
+              		j('#syncSuccessMsg').hide().fadeIn('slow').delay(500).fadeOut('slow');
+		 			
+				}
+				else{
+					j('#loading_Cat').hide();
+					document.getElementById("syncFailureMsg").innerHTML = "SMS Status Master not synchronized successfully.";
+					j('#syncFailureMsg').hide().fadeIn('slow').delay(300).fadeOut('slow');
+					
+				}
+					
+			  },
+			  error:function(data) {
+				 alert("Error: Oops something is wrong, Please Contact System Administer");
+			  }
+			});			
+	} else {
+        alert("db not found, your browser does not support web sql!");
+    }
+	
+}

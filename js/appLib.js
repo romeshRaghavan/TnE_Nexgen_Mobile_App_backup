@@ -1900,7 +1900,7 @@ function fetchSMSClaim() {
 	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
 	
 	j('<th></th>').text("SMS Date").appendTo(rowTh);
-	j('<th></th>').text("Sender").appendTo(rowTh); 	
+	j('<th></th>').text("Expense type").appendTo(rowTh); 	
 	j('<th></th>').text("Text").appendTo(rowTh);
 	j('<th></th>').text("Amt").appendTo(rowTh);
 	var cols = new Number(5);
@@ -1920,11 +1920,13 @@ function fetchSMSClaim() {
 				var smsAmount = parseIncomingSMSForAmount(row.smsText);
 				var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
 				j('<td></td>').attr({ class: ["smsSentDate",""].join(' ') }).text(row.smsSentDate).appendTo(rowss);
-				j('<td></td>').attr({ class: ["senderAddr",""].join(' ') }).text(row.senderAddr).appendTo(rowss);
+				// j('<td></td>').attr({ class: ["senderAddr",""].join(' ') }).text(row.senderAddr).appendTo(rowss);
+				j(rowss).append('<td><img width="50px" height="50px" src="images/'+row.senderAddr+'.png"/></td>');
 				j('<td></td>').attr({ class: ["smsText",""].join(' ') }).text(row.smsText).appendTo(rowss);
 				j('<td></td>').attr({ class: ["smsAmount",""].join(' ') }).text(row.smsAmount).appendTo(rowss);
-				// j(rowss).append('<td><input type = "text"  id = "amt" value= "'+ smsAmount +'" style = "width: 50px;"/></td>');
-				j('<td></td>').attr({ class: ["smsId","displayNone"].join(' ') }).text(row.smsId).appendTo(rowss);
+				 // j(rowss).append('<td><input type = "text"  id = "amt" value= "'+ smsAmount +'" style = "width: 50px;"/></td>');
+				 j('<td></td>').attr({ class: ["smsId","displayNone"].join(' ') }).text(row.smsId).appendTo(rowss);
+				  j('<td></td>').attr({ class: ["sender","displayNone"].join(' ') }).text(row.senderAddr).appendTo(rowss);
 			}	
 					
 			j("#source tr").click(function(){ 

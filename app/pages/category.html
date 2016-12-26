@@ -1,9 +1,11 @@
  <script>
  	hideTRIcons();
     hideEAIcons();
-	 // if(smsWatchFlagStatus = false){
-                  //startWatch();         
-			//  }
+	 var smsWatchFlag=window.localStorage.getItem("smsWatchStatus");
+	if(smsWatchFlag == false){
+		startWatch();
+       // console.log("on html page after"+ window.localStorage.getItem("SMSFilterationStr"));
+	}
  </script>
 <div class="Table">
 	<center><a><p style="color: #19CFEF;font: caption;" onclick="showHelpMenu()">Expenzing Help</p></a></center>

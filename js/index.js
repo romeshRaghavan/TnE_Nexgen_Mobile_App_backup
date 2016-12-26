@@ -2883,17 +2883,33 @@ j.ajax({
       appPageHistory.push(pageRef);
 	 }
 
+
 function viewMessages(){
+	var e = { "data" : {"address": "paytm", "body":"You have made payment of Rs.135.00 to om rest.", "date_sent":1482401219880}}
+	saveIncomingSMSOnLocal(e);
+
+	var e1 = { "data" : {"address": "freecharge", "body":"Recharge of BSNL mobile for Rs.54 was successful. operator refrence number is 0154324", "date_sent":1482601219880}}
+	saveIncomingSMSOnLocal(e1);
+	var e2 = { "data" : {"address": "uber", "body":"You paid uber Rs.134.65 with your paytm wallet. reference number for the transaction is 93123a24", "date_sent":1482701219880}}
+	saveIncomingSMSOnLocal(e2);
+	var e3 = { "data" : {"address": "paytm", "body":"Hi,  your order #142592342342 of Rs. 2490 for 2 items is successful. we will let you know once seller ships it.", "date_sent":1482201219880}}
+	saveIncomingSMSOnLocal(e3);
+	var e4 = { "data" : {"address": "Creditcard", "body":"hi, Payment of your electricity bill was successful for Rs.987.", "date_sent":1482101219880}}
+	saveIncomingSMSOnLocal(e4);
+
 	// console.log("viewMessages  "+filtersStr)
     var headerBackBtn=defaultPagePath+'headerPageForBEOperation.html';
     var pageRef=defaultPagePath+'fairMessageTable.html';
 	j(document).ready(function() {	
-		j('#mainHeader').load(headerBackBtn);
-		j('#mainContainer').load(pageRef);
+		setTimeout(function(){
+              			j('#mainHeader').load(headerBackBtn);
+						j('#mainContainer').load(pageRef);
+		 			}, 500);
 	});
     appPageHistory.push(pageRef);
     j('#loading_Cat').hide();
 }
+
 
 
 
@@ -2910,7 +2926,7 @@ function viewMessages(){
 }
 
 function saveIncomingSMSOnLocal(e){
-	var sms ={"address": "paytm", "body":"You have made payment of Rs.135.00 to om rest.", "date_sent":1482401219880};
+	var sms =e.data;
 	smsList.push(sms);
 	// console.log(sms);
 	var senderAddress = ""+sms.address;	
@@ -2921,12 +2937,13 @@ function saveIncomingSMSOnLocal(e){
 			saveSMS(sms);     
 	}
 }
-
 function startWatch() {
         	if(SMS) SMS.startWatch(function(){
+        			window.localStorage.setItem("smsWatchStatus",true);
         			//smsWatchFlagStatus = true;
         			//alert(updateStrForSMS+'watching started'); 
         	}, function(){
+        		window.localStorage.setItem("smsWatchStatus",false);
         		//smsWatchFlagStatus = false ;
         		//alert(updateStrForSMS+'failed to start watching');
         	});
@@ -2996,7 +3013,7 @@ function operationsOnSMS(){
 }
 
 function smsFilterBox(smsText){
-	//var filtersStr = getFiltrationConstraints();
+	var filtersStr = window.localStorage.getItem("SMSFilterationStr");
 	//console.log("filtersStr  "+filtersStr)
 	var blockedWordsStr = filtersStr.split("@")[0];
 	var allowedWordsStr = filtersStr.split("@")[1];

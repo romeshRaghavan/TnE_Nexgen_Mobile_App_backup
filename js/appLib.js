@@ -2027,7 +2027,10 @@ function synchronizeWhiteListMasterData() {
 					j('#loading_Cat').hide(); 
             		document.getElementById("syncSuccessMsg").innerHTML = "SMS Status Master synchronized successfully.";
               		j('#syncSuccessMsg').hide().fadeIn('slow').delay(500).fadeOut('slow');
-		 			
+		 	setTimeout(function(){
+              			//console.log("before getFiltrationConstraints call")
+		 		getFiltrationConstraints();
+		 	}, 2000);
 				}
 				else{
 					j('#loading_Cat').hide();

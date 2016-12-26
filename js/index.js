@@ -21,7 +21,7 @@ var voucherType;
 var fileTempCameraBE ="";
 var fileTempCameraTS ="";
 var fileTempGalleryBE ="";
-var fileTempGalleryTS ="";
+var fileTempGalleryTS =""
 var mapToCalcERAmt = new Map();
 var requestRunning = false;
 var flagForUnitEnable = false;
@@ -2999,7 +2999,8 @@ function operationsOnSMS(){
 							  var smsSentDate = j(this).find('td.smsSentDate').text();
 							  var smsAmount = j(this).find('td.smsAmount').text();
 							 	smsToExpenseStr = smsID+"_"+smsText+"_"+smsSentDate	+"_"+smsAmount;
-  							  	 j('#mainContainer').load(pageRef);
+  							  	discardMessages(smsID);	 
+							  	j('#mainContainer').load(pageRef);
   							   	//  console.log("inside of save header btn click mthd "+smsToExpenseStr)
   								//  var SMSSuccessMsgForDelete="message/s deleted successfully.";
 								 // document.getElementById("syncSuccessMsg").innerHTML = SMSSuccessMsgForDelete;

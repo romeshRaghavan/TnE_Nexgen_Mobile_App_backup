@@ -1985,6 +1985,7 @@ function getFiltrationConstraints(){
 		tempFilterStr = blockedWordsList+"@"+allowedWordsList;
 		if(tempFilterStr){
 			filtersStr = tempFilterStr;
+			window.localStorage.setItem("SMSFilterationStr",filtersStr);
 		}
 		return tempFilterStr
 	}, 50);

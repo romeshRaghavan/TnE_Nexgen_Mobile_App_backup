@@ -2894,7 +2894,7 @@ function viewMessages(){
 	saveIncomingSMSOnLocal(e2);
 	var e3 = { "data" : {"address": "paytm", "body":"Hi,  your order #142592342342 of Rs. 2490 for 2 items is successful. we will let you know once seller ships it.", "date_sent":1482201219880}}
 	saveIncomingSMSOnLocal(e3);
-	var e4 = { "data" : {"address": "Creditcard", "body":"hi, Payment of your electricity bill was successful for Rs.987.", "date_sent":1482101219880}}
+	var e4 = { "data" : {"address": "Creditcard", "body":"hi, payment of your electricity bill was successful for Rs.987.", "date_sent":1482101219880}}
 	saveIncomingSMSOnLocal(e4);
 
 	// console.log("viewMessages  "+filtersStr)
@@ -2931,7 +2931,8 @@ function saveIncomingSMSOnLocal(e){
 	// console.log(sms);
 	var senderAddress = ""+sms.address;	
 	senderAddress = senderAddress.toLowerCase();
-	if(senderAddress.includes("paytm") || senderAddress.includes("freecharge")){
+		if(senderAddress.includes("paytm") || senderAddress.includes("freecharge") 
+		|| senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){
 		// console.log("inside if condition")
 		if(smsFilterBox(sms.body))
 			saveSMS(sms);     

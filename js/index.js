@@ -2121,6 +2121,9 @@ function validateValidMobileUser(){
 	         	
 	         	 if(data.Status == 'Success'){
 	         	 	setUserStatusInLocalStorage("Valid");
+				 if(window.localStorage.getItem("smartClaimsViaSMSOnMobile");){
+	             	  		 startWatch();
+            			}
 	           }else if(data.Status == 'NoAndroidRole'){
 	         	 	successMessage = data.Message;
 	         	 	headerBackBtn=defaultPagePath+'expenzingImagePage.html';

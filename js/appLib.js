@@ -1131,6 +1131,13 @@ function setUserSessionDetails(val,userJSON){
      window.localStorage.setItem("EaInMobile",val.EaInMobile); 
     } 
     //End
+	//For SmartClaim in mobile
+    if(!val.hasOwnProperty('smartClaimsViaSMSOnMobile')){
+      window.localStorage.setItem("smartClaimsViaSMSOnMobile",false);
+    }else{
+     window.localStorage.setItem("smartClaimsViaSMSOnMobile",val.smartClaimsViaSMSOnMobile); 
+    } 
+    //End
 	 window.localStorage.setItem("UserName",userJSON["user"]);
 	 window.localStorage.setItem("Password",userJSON["pass"]);
 	

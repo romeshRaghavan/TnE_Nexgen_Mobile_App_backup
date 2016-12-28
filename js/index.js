@@ -2117,7 +2117,7 @@ function validateValidMobileUser(){
 	         	
 	         	 if(data.Status == 'Success'){
 	         	 	setUserStatusInLocalStorage("Valid");
-				 if(window.localStorage.getItem("smartClaimsViaSMSOnMobile");){
+				 if(window.localStorage.getItem("smartClaimsViaSMSOnMobile")){
 	             	  		 startWatch();
             			}
 	           }else if(data.Status == 'NoAndroidRole'){

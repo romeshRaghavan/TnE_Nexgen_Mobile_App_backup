@@ -1,10 +1,15 @@
  <script>
  	hideTRIcons();
     hideEAIcons();
-	 var smsWatchFlag=window.localStorage.getItem("smsWatchStatus");
-	if(smsWatchFlag == false){
+	hideSmartClaims();
+	var smsWatchFlag=window.localStorage.getItem("smsWatchStatus");
+	var smartClaimsRole=window.localStorage.getItem("smartClaimsViaSMSOnMobile");
+	if(smartClaimsRole){
+		
+		if(smsWatchFlag == false){
 		startWatch();
        // console.log("on html page after"+ window.localStorage.getItem("SMSFilterationStr"));
+		}
 	}
  </script>
 <div class="Table">
@@ -38,9 +43,9 @@
 	<div class="Row" style="text-align: -webkit-center;">
         <div class="Cell" style="border-bottom: 1px solid #e5e5e5;">
 		<a onclick="createWallet();"><p class="createwalletlogo" ></p><span style="color: #14a6c5;">Paper Receipt</span></a></div>
-		<div class="Cell" style="border-bottom: 1px solid #e5e5e5;">
-		<a onclick="viewMessages();"><p class="createewalletlogo" ></p><span style="color: #14a6c5;padding-top: 5%;text-align: -webkit-center;">Smart Claims </span></a></div><br>
-		
+	<div class="Cell" id="smartClaimsID" style="border-bottom: 1px solid #e5e5e5;">
+		<a onclick="viewMessages();"><p class="createewalletlogo" ></p><span style="color: #14a6c5;padding-top: 5%;text-align: -webkit-center;">Smart Expeneses</span></a>
+		</div><br>
 	<div>
 	  <div style="display:none" id="loading_Cat" >
             <img src="images/loading2.gif" id="loading-image_Cat" alt="Loading..." >

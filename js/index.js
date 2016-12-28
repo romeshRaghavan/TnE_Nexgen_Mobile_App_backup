@@ -2,7 +2,7 @@ var j = jQuery.noConflict();
 var defaultPagePath='app/pages/';
 var headerMsg = "Expenzing";
 var urlPath;
-var WebServicePath = 'http://live.nexstepapps.com:8284/NexstepWebService/mobileLinkResolver.service';
+var WebServicePath = 'http://1.255.255.36:9898/NexstepWebService/mobileLinkResolver.service';
 var clickedFlagCar = false;
 var clickedFlagTicket = false;
 var clickedFlagHotel = false;
@@ -3057,4 +3057,11 @@ function getExpenseDateFromSMS(input){
 	var date = new Date(input);
 
 	return (date.getMonth()+1)+"/"+date.getDate()+"/"+date.getFullYear();
+}
+function hideSmartClaims(){
+	if(window.localStorage.getItem("smartClaimsViaSMSOnMobile") == "true"){
+		document.getElementById('smartClaimsID').style.display="";		
+	}else{
+		document.getElementById('smartClaimsID').style.display="none";
+	}
 }

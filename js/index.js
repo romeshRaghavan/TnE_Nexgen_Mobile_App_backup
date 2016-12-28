@@ -33,10 +33,6 @@ var expensePageFlag = '';		//S for smsExpenses And N for normal expenses
 var filtersStr = "";
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
-	
- document.addEventListener('onSMSArrive',function(e){
-			 	saveIncomingSMSOnLocal(e);
-			 },false);
 });
 
 function login()

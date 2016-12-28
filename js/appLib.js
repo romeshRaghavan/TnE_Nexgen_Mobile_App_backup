@@ -39,6 +39,10 @@ var app = {
 		  document.addEventListener("backbutton", function(e){
 			 goBackEvent();
 		  }, false);
+		document.addEventListener('onSMSArrive',function(e){
+			 	saveIncomingSMSOnLocal(e);
+			 },false);
+			});
 		  validateValidMobileUser();
 		  
 		  }

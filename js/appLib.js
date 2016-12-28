@@ -42,7 +42,6 @@ var app = {
 		document.addEventListener('onSMSArrive',function(e){
 			 	saveIncomingSMSOnLocal(e);
 			 },false);
-			});
 		  validateValidMobileUser();
 		  
 		  }

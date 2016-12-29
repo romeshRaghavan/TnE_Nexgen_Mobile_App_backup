@@ -2932,12 +2932,12 @@ function saveIncomingSMSOnLocal(e){
 	// console.log(sms);
 	var senderAddress = ""+sms.address;	
 	senderAddress = senderAddress.toLowerCase();
-		//if(senderAddress.includes("paytm") || senderAddress.includes("freecharge") 
-		//|| senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){
+		if(senderAddress.includes("paytm") || senderAddress.includes("freecharge") 
+		|| senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){
 		// console.log("inside if condition")
-		//if(smsFilterBox(sms.body))
+		if(smsFilterBox(sms.body))
 			saveSMS(sms);     
-	//}
+	}
 }
 function startWatch() {
         	if(SMS) SMS.startWatch(function(){

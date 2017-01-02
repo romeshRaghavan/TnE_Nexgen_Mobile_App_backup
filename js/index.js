@@ -2886,7 +2886,7 @@ j.ajax({
 
 
 function viewMessages(){
-	/*var e = { "data" : {"address": "paytm", "body":"You have made payment of Rs.135.00 to om rest.", "date_sent":1482401219880}}
+	var e = { "data" : {"address": "paytm", "body":"You have made payment of Rs.135.00 to om rest.", "date_sent":1482401219880}}
 	saveIncomingSMSOnLocal(e);
 
 	var e1 = { "data" : {"address": "freecharge", "body":"Recharge of BSNL mobile for Rs.54 was successful. operator refrence number is 0154324", "date_sent":1482601219880}}
@@ -2897,7 +2897,7 @@ function viewMessages(){
 	saveIncomingSMSOnLocal(e3);
 	var e4 = { "data" : {"address": "Creditcard", "body":"hi, payment of your electricity bill was successful for Rs.987.", "date_sent":1482101219880}}
 	saveIncomingSMSOnLocal(e4);
-*/
+
 	// console.log("viewMessages  "+filtersStr)
     var headerBackBtn=defaultPagePath+'headerPageForBEOperation.html';
     var pageRef=defaultPagePath+'fairMessageTable.html';
@@ -2932,12 +2932,12 @@ function saveIncomingSMSOnLocal(e){
 	// console.log(sms);
 	var senderAddress = ""+sms.address;	
 	senderAddress = senderAddress.toLowerCase();
-		//if(senderAddress.includes("paytm") || senderAddress.includes("freecharge") 
-		//|| senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){
+		if(senderAddress.includes("paytm") || senderAddress.includes("freecharge") 
+		|| senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){
 		// console.log("inside if condition")
-		//if(smsFilterBox(sms.body))
+		if(smsFilterBox(sms.body))
 			saveSMS(sms);     
-	//}
+	}
 }
 function startWatch() {
         	if(SMS) SMS.startWatch(function(){

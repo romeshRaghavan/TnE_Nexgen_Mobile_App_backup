@@ -81,6 +81,7 @@ function login()
 				synchronizeTRForTS();  
 			  }
                 synchronizeBEMasterData();
+			alert(data.smartClaimsViaSMSOnMobile);
 		if(data.smartClaimsViaSMSOnMobile){
 			synchronizeWhiteListMasterData();
 	                startWatch();

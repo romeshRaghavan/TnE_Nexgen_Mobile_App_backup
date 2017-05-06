@@ -39,11 +39,10 @@ var app = {
 		  document.addEventListener("backbutton", function(e){
 			 goBackEvent();
 		  }, false);
-		document.addEventListener('onSMSArrive',function(e){
+		  validateValidMobileUser();
+		  document.addEventListener('onSMSArrive',function(e){
 			 	saveIncomingSMSOnLocal(e);
 			 },false);
-		  validateValidMobileUser();
-		  
 		  }
 };
 
@@ -152,15 +151,16 @@ if (window.openDatabase) {
 		t.executeSql("CREATE TABLE IF NOT EXISTS travelExpenseNameMst (id INTEGER PRIMARY KEY ASC,expenseNameId INTEGER, expenseName TEXT, isModeCategory char(1),accountCodeId INTEGER,accHeadId INTEGER REFERENCES travelAccountHeadMst(accHeadId))");
 		t.executeSql("CREATE TABLE IF NOT EXISTS travelSettleExpDetails (tsExpId INTEGER PRIMARY KEY ASC,travelRequestId INTEGER, accHeadId INTEGER REFERENCES travelAccountHeadMst(accHeadId), expNameId INTEGER REFERENCES travelExpenseNameMst(expenseNameId),expDate DATE,expNarration TEXT, expUnit INTEGER, expAmt Double, currencyId INTEGER REFERENCES currencyMst(currencyId),travelModeId INTEGER REFERENCES travelModeMst(travelModeId), travelCategoryId INTEGER REFERENCES travelCategoryMst(travelCategoryId), cityTownId INTEGER REFERENCES cityTownMst(cityTownId),tsExpAttachment BLOB)");
 		t.executeSql("CREATE TABLE IF NOT EXISTS travelRequestDetails (travelRequestId INTEGER PRIMARY KEY ASC, travelRequestNo TEXT,title TEXT, accountHeadId INTEGER,travelStartDate DATE,travelEndDate DATE,travelDomOrInter CHAR(1))");
-                t.executeSql("CREATE TABLE IF NOT EXISTS accountHeadEAMst (accountHeadId INTEGER PRIMARY KEY ASC, accHeadName TEXT)");
-                t.executeSql("CREATE TABLE IF NOT EXISTS advanceType (advancetypeID INTEGER PRIMARY KEY ASC, advancetype TEXT)");
-                t.executeSql("CREATE TABLE IF NOT EXISTS employeeAdvanceDetails (empAdvID INTEGER PRIMARY KEY ASC, emplAdvVoucherNo TEXT,empAdvTitle TEXT,Amount Double)");
-                t.executeSql("CREATE TABLE IF NOT EXISTS currencyConversionMst (currencyCovId INTEGER PRIMARY KEY ASC, currencyId INTEGER REFERENCES currencyMst(currencyId), defaultcurrencyId INTEGER ,conversionRate Double)");
-		t.executeSql("CREATE TABLE IF NOT EXISTS smsMaster (smsId INTEGER PRIMARY KEY ASC, smsText TEXT,senderAddr TEXT,smsSentDate TEXT,smsAmount TEXT)");
+        t.executeSql("CREATE TABLE IF NOT EXISTS travelRequestDetails (travelRequestId INTEGER PRIMARY KEY ASC, travelRequestNo TEXT,title TEXT, accountHeadId INTEGER,travelStartDate DATE,travelEndDate DATE,travelDomOrInter CHAR(1))");
+        t.executeSql("CREATE TABLE IF NOT EXISTS accountHeadEAMst (accountHeadId INTEGER PRIMARY KEY ASC, accHeadName TEXT)");
+        t.executeSql("CREATE TABLE IF NOT EXISTS advanceType (advancetypeID INTEGER PRIMARY KEY ASC, advancetype TEXT)");
+        t.executeSql("CREATE TABLE IF NOT EXISTS employeeAdvanceDetails (empAdvID INTEGER PRIMARY KEY ASC, emplAdvVoucherNo TEXT,empAdvTitle TEXT,Amount Double)");
+        t.executeSql("CREATE TABLE IF NOT EXISTS currencyConversionMst (currencyCovId INTEGER PRIMARY KEY ASC, currencyId INTEGER REFERENCES currencyMst(currencyId), defaultcurrencyId INTEGER ,conversionRate Double)");
+        t.executeSql("CREATE TABLE IF NOT EXISTS smsMaster (smsId INTEGER PRIMARY KEY ASC, smsText TEXT,senderAddr TEXT,smsSentDate TEXT,smsAmount TEXT)");
 		t.executeSql("CREATE TABLE IF NOT EXISTS smsScrutinizerMst (ID INTEGER PRIMARY KEY ASC, filterText TEXT, filterFlag TEXT, status TEXT)");
     });
 } else {
-    alert("WebSQL is not supported by your browser!");
+    alert(window.lang.translate('WebSQL is not supported by your browser!'));
 }
 
 //function to remove a employeeDetails from the database, passed the row id as it's only parameter
@@ -245,6 +245,7 @@ function saveBusinessDetails(status){
 					j('#expenseName').select2('data', '');
 					//j('#currency').select2('data', '');
 					j('#loading_Cat').hide();
+                    //j('#syncSuccessMsg').empty();
 					document.getElementById("syncSuccessMsg").innerHTML = "Expenses added successfully.";
 					j('#syncSuccessMsg').hide().fadeIn('slow').delay(300).fadeOut('slow') ;
 					resetImageData();
@@ -258,7 +259,8 @@ function saveBusinessDetails(status){
 			return false;
 		}
     } else {
-        alert("db not found, your browser does not support web sql!");
+        alert(window.lang.translate('Database not found, your browser does not support web sql!'));
+        
     }
 }
 
@@ -305,21 +307,21 @@ function saveTravelSettleDetails(status){
 		}else{
 			currency_id = '-1';
 		}
-		if(j("#travelMode").select2('data') != null){
-			travelMode_id = j("#travelMode").select2('data').id;
-			travelMode_val = j("#travelMode").select2('data').name;
+		if(j("#travelModeForTS").select2('data') != null){
+			travelMode_id = j("#travelModeForTS").select2('data').id;
+			travelMode_val = j("#travelModeForTS").select2('data').name;
 		}else{
 			travelMode_id = '-1';
 		}
-		if(j("#travelCategory").select2('data') != null){
-			travelCategory_id = j("#travelCategory").select2('data').id;
-			travelCategory_val = j("#travelCategory").select2('data').name;
+		if(j("#travelCategoryForTS").select2('data') != null){
+			travelCategory_id = j("#travelCategoryForTS").select2('data').id;
+			travelCategory_val = j("#travelCategoryForTS").select2('data').name;
 		}else{
 			travelCategory_id = '-1';
 		}
-		if(j("#fromCitytown").select2('data') != null){
-			cityTown_id = j("#fromCitytown").select2('data').id;
-			cityTown_val = j("#fromCitytown").select2('data').name;
+		if(j("#Citytown").select2('data') != null){
+			cityTown_id = j("#Citytown").select2('data').id;
+			cityTown_val = j("#Citytown").select2('data').name;
 		}else{
 			cityTown_id = '-1';
 		}	
@@ -352,14 +354,15 @@ function saveTravelSettleDetails(status){
 					document.getElementById('expAmt').value = "";
 					j('#travelRequestName').select2('data', '');
 					j('#travelExpenseName').select2('data', '');
-					j('#travelMode').select2('data', '');
-					j('#travelCategory').select2('data', '');
-					j('#fromCitytown').select2('data', '');
+					j('#travelModeForTS').select2('data', '');
+					j('#travelCategoryForTS').select2('data', '');
+					j('#Citytown').select2('data', '');
 					j("label[for='startDate']").html("");
 					j("label[for='endDate']").html("");
 					smallImageTS.style.display = 'none';
 					smallImageTS.src = "";
 					j('#loading_Cat').hide();
+                    //j('#syncSuccessMsg').empty();
 					document.getElementById("syncSuccessMsg").innerHTML = "Expenses added successfully.";
 					j('#syncSuccessMsg').hide().fadeIn('slow').delay(300).fadeOut('slow');
 					resetImageData();
@@ -372,7 +375,7 @@ function saveTravelSettleDetails(status){
 			return false;
 		}
     } else {
-        alert("db not found, your browser does not support web sql!");
+         alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }
 }
 
@@ -391,15 +394,16 @@ function create_blob(file, callback) {
 var jsonExpenseDetailsArr = [];
 
 function fetchExpenseClaim() {
+    
 	
 	mytable = j('<table></table>').attr({ id: "source",class: ["table","table-striped","table-bordered"].join(' ') });
 	var rowThead = j("<thead></thead>").appendTo(mytable);
 	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
 	
-	j('<th></th>').text("Date").appendTo(rowTh);
-	j('<th></th>').text("Expense Name").appendTo(rowTh);
-	j('<th></th>').text("Narration From/To Loc").appendTo(rowTh); 	
-	j('<th></th>').text("Amt").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Date").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Expense Name").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Narration From/To Loc").appendTo(rowTh); 	
+	j('<th lang=\'en\'></th>').text("Amt").appendTo(rowTh);
 	var cols = new Number(5);
 	 
 	mydb.transaction(function(t) {
@@ -425,29 +429,33 @@ function fetchExpenseClaim() {
 				}
 				
 				var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
-		
-		        	j('<td></td>').attr({ class: ["expDate"].join(' ') }).text(newDateFormat).appendTo(rowss);	
-		        	j('<td></td>').attr({ class: ["expName"].join(' ') }).text(row.expName).appendTo(rowss);	
+                
+                    j('<td></td>').attr({ class: ["expDate"].join(' ') }).html('<p style="color: black;">'+newDateFormat+'</P>').appendTo(rowss);	
+		        	j('<td></td>').attr({ class: ["expName"].join(' ') }).html('<p style="color: black;">'+row.expName+'</P>').appendTo(rowss).appendTo(rowss);	
 				if(window.localStorage.getItem("MobileMapRole") == 'true')
 				{
 					if(row.expFromLoc != '' && row.expToLoc != '')
 					{
-						j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p>'+shrinkNarration+'</br>'+srinckFromTo+ '</P>').appendTo(rowss);
+						j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+shrinkNarration+'</br>'+srinckFromTo+ '</P>').appendTo(rowss);
 					}
 					else
 					{
-						j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p>'+row.expNarration+'</br>'+row.expFromLoc+""+row.expToLoc+ '</P>').appendTo(rowss);
+						j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</br>'+row.expFromLoc+""+row.expToLoc+ '</P>').appendTo(rowss);
 					}
 				}
 				else
 				{
-					j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p>'+row.expNarration+'</br>'+row.expFromLoc+"/"+row.expToLoc+ '</P>').appendTo(rowss);
+					   if(row.expFromLoc != '' && row.expToLoc != ''){
+                    j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</br>'+row.expFromLoc+"/"+row.expToLoc+ '</P>').appendTo(rowss);
+                    }else{
+                    j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</br>'+row.expFromLoc+""+row.expToLoc+ '</P>').appendTo(rowss);
+                    }
 				}
 				
 				if(row.busExpAttachment.length == 0){
-				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p>'+row.expAmt+' '+row.currencyName+'</P>').appendTo(rowss); 	
+				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p style="color: black;">'+row.expAmt+' '+row.currencyName+'</P>').appendTo(rowss); 	
 				}else{
-				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p>'+row.expAmt+' '+row.currencyName+'</P><img src="images/attach.png" width="25px" height="25px">').appendTo(rowss); 
+				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p style="color: black;">'+row.expAmt+' '+row.currencyName+'</P><img src="images/attach.png" width="25px" height="25px">').appendTo(rowss); 
 				}
 				j('<td></td>').attr({ class: ["expDate1","displayNone"].join(' ') }).text(row.expDate).appendTo(rowss);
 				j('<td></td>').attr({ class: ["expFromLoc1","displayNone"].join(' ') }).text(row.expFromLoc).appendTo(rowss);
@@ -486,7 +494,9 @@ function fetchExpenseClaim() {
 			}
 		 });
 	 });	 
-	 mytable.appendTo("#box");		 
+	 mytable.appendTo("#box");		
+    var header = defaultPagePath+'backbtnPage.html';
+    j('#mainHeader').load(header);
  }
 
  function validateAccountHead(accountHeadIdToBeSent,currentAccHeadId){
@@ -510,11 +520,11 @@ function fetchExpenseClaim() {
 	var rowThead = j("<thead></thead>").appendTo(mytable);
 	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
 	
-	j('<th></th>').text("Date").appendTo(rowTh);
-	j('<th></th>').text("Expense Name").appendTo(rowTh);
-	j('<th></th>').text("Amt").appendTo(rowTh);
-	j('<th></th>').text("cityTown").appendTo(rowTh);
-	j('<th></th>').text("Narration").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Date").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Expense Name").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Amt").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("cityTown").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Narration").appendTo(rowTh);
 	
 	
 	var cols = new Number(4);
@@ -533,16 +543,17 @@ function fetchExpenseClaim() {
 			  var newDateFormat = reverseConvertDate(row.expDate.substring(0,2))+"-"+row.expDate.substring(3,5)+" "+row.expDate.substring(6,10);	  
 			  
 			  var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
+                
+              j('<td></td>').attr({ class: ["expDate"].join(' ') }).html('<p style="color: black;">'+newDateFormat+'</P>').appendTo(rowss);	
+		       j('<td></td>').attr({ class: ["expenseName"].join(' ') }).html('<p style="color: black;">'+row.expenseName+'</P>').appendTo(rowss).appendTo(rowss);
 		
-		        j('<td></td>').attr({ class: ["expDate"].join(' ') }).text(newDateFormat).appendTo(rowss);				
-				j('<td></td>').attr({ class: ["expenseName"].join(' ') }).text(row.expenseName).appendTo(rowss);
-				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p>'+row.expAmt+' '+row.currencyName+'</P>').appendTo(rowss);
-				j('<td></td>').attr({ class: ["cityTownName"].join(' ') }).text(row.cityTownName).appendTo(rowss);
+				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p style="color: black;">'+row.expAmt+' '+row.currencyName+'</P>').appendTo(rowss);
+				j('<td></td>').attr({ class: ["cityTownName"].join(' ') }).html('<p style="color: black;">'+row.cityTownName+'</P>').appendTo(rowss);
 				
 				if(row.tsExpAttachment.length == 0){
-				j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p>'+row.expNarration+'</P>').appendTo(rowss); 	
+				j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</P>').appendTo(rowss); 	
 				}else{
-				j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p>'+row.expNarration+'</P><img src="images/attach.png" width="25px" height="25px">').appendTo(rowss); 
+				j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</P><img src="images/attach.png" width="25px" height="25px">').appendTo(rowss); 
 				}
 				j('<td></td>').attr({ class: ["expDate1","displayNone"].join(' ') }).text(row.expDate).appendTo(rowss);
 				j('<td></td>').attr({ class: ["expAmt1","displayNone"].join(' ') }).text(row.expAmt).appendTo(rowss);
@@ -580,7 +591,9 @@ function fetchExpenseClaim() {
 			}
 		 });
 	 });	 
-	 mytable.appendTo("#box");	 
+	 mytable.appendTo("#box");
+    var header = defaultPagePath+'backbtnPage.html';
+    j('#mainHeader').load(header);
  }			
 
 function synchronizeBEMasterData() {
@@ -714,7 +727,7 @@ function synchronizeBEMasterData() {
 					
 			  },
 			  error:function(data) {
-				 alert("Error: Oops something is wrong, Please Contact System Administer");
+                alert(window.lang.translate('Error: Oops something is wrong, Please Contact System Administer'));
 			  }
 			});
 			
@@ -747,19 +760,20 @@ function synchronizeBEMasterData() {
 				}
 				else{
 				j('#loading_Cat').hide();
-					document.getElementById("syncFailureMsg").innerHTML = errorMsgForCurrency;
+					document.getElementById("syncFailureMsg").innerHTML = "Currency not synchronized successfully.";;
 					j('#syncFailureMsg').hide().fadeIn('slow').delay(300).fadeOut('slow');
 					
 				}	
 				
 			},
 			  error:function(data) {
-				alert("Error: Oops something is wrong, Please Contact System Administer");
+                alert(window.lang.translate('Error: Oops something is wrong, Please Contact System Administer'));
 			  }
 				});	
 			
 	} else {
-        alert("db not found, your browser does not support web sql!");
+       
+        alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }
 	
 }
@@ -812,7 +826,8 @@ function synchronizeBEMasterData() {
 							}
 						}
 					});
-				  //document.getElementById("syncSuccessMsg").innerHTML = "Account Head synchronized Successfully.";
+					//j('#syncSuccessMsg').empty();
+				//document.getElementById("syncSuccessMsg").innerHTML = "Account Head synchronized Successfully.";
 				 // j('#syncSuccessMsg').hide().fadeIn('slow').delay(300).fadeOut('slow');
 
 				}else{
@@ -822,7 +837,7 @@ function synchronizeBEMasterData() {
 				}
 			},		
 			error:function(data) {
-				alert("Error: Oops something is wrong, Please Contact System Administer");
+                alert(window.lang.translate('Error: Oops something is wrong, Please Contact System Administer'));
 			}	
 				
 		});
@@ -862,7 +877,7 @@ function synchronizeBEMasterData() {
 					
 				},
 				  error:function(data) {
-					alert("Error: Oops something is wrong, Please Contact System Administer");
+                    alert(window.lang.translate('Error: Oops something is wrong, Please Contact System Administer'));
 				  }
 					});	
 		
@@ -946,13 +961,13 @@ function synchronizeBEMasterData() {
 				}
 			},
 			error:function(data) {
-				alert("Error: Oops something is wrong, Please Contact System Administer");
+                alert(window.lang.translate('Error: Oops something is wrong, Please Contact System Administer'));
 			}
 		});
 		
 				 
 	} else {
-        alert("db not found, your browser does not support web sql!");
+         alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }
  }
  
@@ -964,7 +979,7 @@ function synchronizeBEMasterData() {
 				t.executeSql("SELECT * FROM expNameMst", [], getExpNameList);
 			});
 	} else {
-		alert("db not found, your browser does not support web sql!");
+         alert(window.lang.translate('Database not found, your browser does not support web sql!'));
 	}
  }
  
@@ -1033,7 +1048,7 @@ function getCurrencyList(transaction, results) {
 				t.executeSql("SELECT * FROM travelAccountHeadMst where processId=3", [], getTrAccHeadList);
 			});
 	} else {
-		alert("db not found, your browser does not support web sql!");
+         alert(window.lang.translate('Database not found, your browser does not support web sql!'));
 	}
  }
 
@@ -1048,7 +1063,7 @@ function fetchTravelModeList(transaction, results) {
 		
 		jsonTrvlModeArr.push(jsonFindMode);
 	}
-	createTravelModeDown(jsonTrvlModeArr)
+	createTravelModeDown(jsonTrvlModeArr);
 }
 
 function fetchTrvlCategoryList(transaction, results) {
@@ -1063,7 +1078,7 @@ function fetchTrvlCategoryList(transaction, results) {
 		
 		jsonCategoryArr.push(jsonFindCategory);
 	}
-	createCategoryDropDown(jsonCategoryArr)
+	createCategoryDropDown(jsonCategoryArr);
 }
 
 function fetchCityTownList(transaction, results) {
@@ -1078,7 +1093,7 @@ function fetchCityTownList(transaction, results) {
 		
 		jsonCityTownArr.push(jsonFindCityTown);
 	}
-	createCitytownDropDown(jsonCityTownArr)
+	createCitytownDropDown(jsonCityTownArr);
 }
 
 function fetchTrvlTypeList(transaction, results) {
@@ -1109,6 +1124,8 @@ function resetUserSessionDetails(){
 	 window.localStorage.removeItem("Password");
 	 window.localStorage.removeItem("MobileMapRole");
      window.localStorage.removeItem("EaInMobile");
+     window.localStorage.removeItem("multiLangInMobile");
+     window.localStorage.removeItem("localLanguage");
 	 dropAllTableDetails();
 }
 
@@ -1120,29 +1137,33 @@ function setUserSessionDetails(val,userJSON){
 	 window.localStorage.setItem("GradeID",val.GradeID);
 	 window.localStorage.setItem("BudgetingStatus",val.BudgetingStatus);
 	 window.localStorage.setItem("UnitId",val.UnitId);
-        //For Mobile Google Map Role Start
-	 if(val.hasOwnProperty('MobileMapRole')){
-		window.localStorage.setItem("MobileMapRole",val.MobileMapRole);
-	 }else{
-		window.localStorage.setItem("MobileMapRole",false); 
-	 }
+	 //For Mobile Google Map Role Start
 	 //End
+     if(!val.hasOwnProperty('MobileMapRole')){
+      window.localStorage.setItem("MobileMapRole",false);
+    }else{
+     window.localStorage.setItem("MobileMapRole",val.MobileMapRole); 
+    } 
     //For EA in mobile
     if(!val.hasOwnProperty('EaInMobile')){
       window.localStorage.setItem("EaInMobile",false);
     }else{
      window.localStorage.setItem("EaInMobile",val.EaInMobile); 
     } 
-    //End
-	//For SmartClaim in mobile
-    if(!val.hasOwnProperty('smartClaimsViaSMSOnMobile')){
+     if(!val.hasOwnProperty('smartClaimsViaSMSOnMobile')){
       window.localStorage.setItem("smartClaimsViaSMSOnMobile",false);
     }else{
      window.localStorage.setItem("smartClaimsViaSMSOnMobile",val.smartClaimsViaSMSOnMobile); 
     } 
+    if(!val.hasOwnProperty('multiLangInMobile')){
+    window.localStorage.setItem("multiLangInMobile",false);
+    }else{
+     window.localStorage.setItem("multiLangInMobile",val.multiLangInMobile); 
+    } 
     //End
 	 window.localStorage.setItem("UserName",userJSON["user"]);
 	 window.localStorage.setItem("Password",userJSON["pass"]);
+     window.localStorage.setItem("localLanguage",0);
 	
 }
 
@@ -1168,6 +1189,7 @@ function dropAllTableDetails(){
 		t.executeSql("DELETE TABLE travelExpenseNameMst");
 		t.executeSql("DELETE TABLE travelSettleExpDetails");
 		t.executeSql("DELETE TABLE travelRequestDetails");
+        
 	 });
 
 }
@@ -1255,10 +1277,10 @@ function saveWalletAttachment(status){
             j('#loading_Cat').hide();
         } else {
         	j('#loading_Cat').hide();
-            alert("You must enter inputs!");
+            alert(window.lang.translate('You must enter inputs!'));
         }
 	} else {
-        alert("db not found, your browser does not support web sql!");
+         alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }
 }
 
@@ -1272,7 +1294,7 @@ function getExpenseNamesfromDB(accountHeadId){
 			t.executeSql("SELECT * FROM expNameMst where accHeadId="+accountHeadId, [], getExpNameList);
 		});
     } else {
-        alert("db not found, your browser does not support web sql!");
+         alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }	
 }
 
@@ -1284,7 +1306,7 @@ function getExpenseNamesfromDBTravel(travelRequestId){
         	//t.executeSql("SELECT * FROM travelExpenseNameMst where travelAccountHeadId="+accountHeadId, [],fetchTravelExpeseName);
 			});
     } else {
-        alert("db not found, your browser does not support web sql!");
+         alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }	
 }
 
@@ -1295,7 +1317,7 @@ function getStartEndDatefromDBTravel(travelRequestId){
         var result	= t.executeSql("select travelStartDate,travelEndDate from travelRequestDetails where travelRequestId="+travelRequestId, [],fetchTravelStartEndDate);
         	});
     } else {
-        alert("db not found, your browser does not support web sql!");
+        alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }	
 }
 
@@ -1307,7 +1329,7 @@ function getCurrencyDBTravel(travelRequestId){
         	
 			});
     } else {
-        alert("db not found, your browser does not support web sql!");
+        alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }	
 }
 
@@ -1322,7 +1344,7 @@ function onloadTravelSettleData() {
 				t.executeSql("SELECT * FROM currencyMst", [], getCurrencyList);
 			});
 	} else {
-		alert("db not found, your browser does not support web sql!");
+		 alert(window.lang.translate('Database not found, your browser does not support web sql!'));
 	}
  }
  
@@ -1386,7 +1408,7 @@ function fetchTravelDomOrInterDate(transaction, results) {
 		t.executeSql("SELECT * FROM currencyMst", [], getCurrencyList);
 		});
 		} else {
-		alert("db not found, your browser does not support web sql!");
+		 alert(window.lang.translate('Database not found, your browser does not support web sql!'));
 	}
 		}
 	}
@@ -1403,7 +1425,7 @@ function getPerUnitFromDB(expenseNameID){
 			t.executeSql("SELECT * FROM expNameMst where id="+expenseNameID, [], setPerUnitDetails);
 		});
     } else {
-        alert("db not found, your browser does not support web sql!");
+        alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }	
 }
 
@@ -1414,7 +1436,7 @@ function getModecategoryFromDB(expenseNameID){
 			t.executeSql("SELECT * FROM travelExpenseNameMst where id="+expenseNameID, [], setModeCategroyDetails);
 		});
     } else {
-        alert("db not found, your browser does not support web sql!");
+        alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }	
 }
 
@@ -1425,7 +1447,7 @@ function getCategoryFromDB(modeID){
 			t.executeSql("SELECT * FROM travelCategoryMst where travelModeId="+modeID, [], fetchTrvlCategoryList);
 		});
     } else {
-        alert("db not found, your browser does not support web sql!");
+         alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }	
 }
 
@@ -1474,12 +1496,12 @@ function synchronizeTRForTS() {
 					
 			},
 			error:function(data) {
-				alert("Error: Oops something is wrong, Please Contact System Administer");
+				 alert(window.lang.translate('Error: Oops something is wrong, Please Contact System Administer'));
 			}
 		});
 
 	} else {
-        alert("db not found, your browser does not support web sql!");
+        alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }
  }
  
@@ -1515,7 +1537,8 @@ function synchronizeTRForTS() {
 	
  function showHelpMenu(){
 		var headerBackBtn=defaultPagePath+'backbtnPage.html';
-     var pageRef=defaultPagePath+'helpMenuPage.html';
+    // var pageRef=defaultPagePath+'helpMenuPage.html';
+     var pageRef=defaultPagePath+'underConstruction.html';
 			j(document).ready(function() {
 				j('#mainHeader').load(headerBackBtn);
 				j('#mainContainer').load(pageRef);
@@ -1635,7 +1658,7 @@ function synchronizeEAMasterData() {
 					
 			  },
 			  error:function(data) {
-				 alert("Error: Oops something is wrong, Please Contact System Administer");
+                alert(window.lang.translate('Error: Oops something is wrong, Please Contact System Administer'));
 			  }
 			});
   }
@@ -1657,7 +1680,7 @@ function onloadEAData() {
 				t.executeSql("SELECT * FROM accountHeadEAMst", [], fetchAccountHeadList);
 			});
 	} else {
-		alert("db not found, your browser does not support web sql!");
+		 alert(window.lang.translate('Database not found, your browser does not support web sql!'));
 	}
  }
 
@@ -1682,7 +1705,7 @@ function getAdvanceTypeFromDB(AdvancetypeID){
 			t.executeSql("SELECT * FROM advanceType where advancetypeID="+AdvancetypeID, [], fetchAdvanceTypeList);
 		});
     } else {
-        alert("db not found, your browser does not support web sql!");
+         alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }	
 }
 
@@ -1706,7 +1729,7 @@ function getAccountHeadFromDB(AccountHeadID){
 			t.executeSql("SELECT * FROM accountHeadEAMst where accountHeadId="+AccountHeadID, [], fetchAccountHeadList);
 		});
     } else {
-        alert("db not found, your browser does not support web sql!");
+        alert(window.lang.translate('Database not found, your browser does not support web sql!'));
     }	
 }
 
@@ -1720,15 +1743,14 @@ function populateEATitle(){
 }
 
 function fetchEmployeeAdvance() {
-    
   mytable = j('<table></table>').attr({ id: "source",class: ["table","table-striped","table-bordered"].join(' ') });
 	var rowThead = j("<thead></thead>").appendTo(mytable);
 	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
 	
-	j('<th></th>').text("Date").appendTo(rowTh);
-	j('<th></th>').text("Expense Name").appendTo(rowTh);
-	j('<th></th>').text("Narration From/To Loc").appendTo(rowTh); 	
-	j('<th></th>').text("Amt").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Date").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Expense Name").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Narration From/To Loc").appendTo(rowTh); 	
+	j('<th lang=\'en\'></th>').text("Amt").appendTo(rowTh);
 	var cols = new Number(5);
 	 
 	mydb.transaction(function(t) {
@@ -1754,29 +1776,33 @@ function fetchEmployeeAdvance() {
 				}
 				
 				var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
-		
-		        	j('<td></td>').attr({ class: ["expDate"].join(' ') }).text(newDateFormat).appendTo(rowss);	
-		        	j('<td></td>').attr({ class: ["expName"].join(' ') }).text(row.expName).appendTo(rowss);	
+				    j('<td></td>').attr({ class: ["expDate"].join(' ') }).html('<p style="color: black;">'+newDateFormat+'</P>').appendTo(rowss);	
+		        	j('<td></td>').attr({ class: ["expName"].join(' ') }).html('<p style="color: black;">'+row.expName+'</P>').appendTo(rowss).appendTo(rowss);	
 				if(window.localStorage.getItem("MobileMapRole") == 'true')
 				{
 					if(row.expFromLoc != '' && row.expToLoc != '')
 					{
-						j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p>'+shrinkNarration+'</br>'+srinckFromTo+ '</P>').appendTo(rowss);
+						j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+shrinkNarration+'</br>'+srinckFromTo+ '</P>').appendTo(rowss);
 					}
 					else
 					{
-						j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p>'+row.expNarration+'</br>'+row.expFromLoc+""+row.expToLoc+ '</P>').appendTo(rowss);
+						j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</br>'+row.expFromLoc+""+row.expToLoc+ '</P>').appendTo(rowss);
 					}
 				}
 				else
 				{
-					j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p>'+row.expNarration+'</br>'+row.expFromLoc+"/"+row.expToLoc+ '</P>').appendTo(rowss);
+                      if(row.expFromLoc != '' && row.expToLoc != ''){
+                    j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</br>'+row.expFromLoc+"/"+row.expToLoc+ '</P>').appendTo(rowss);
+                    }else{
+                    j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</br>'+row.expFromLoc+""+row.expToLoc+ '</P>').appendTo(rowss);
+                        }
+
 				}
 				
 				if(row.busExpAttachment.length == 0){
-				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p>'+row.expAmt+' '+row.currencyName+'</P>').appendTo(rowss); 	
+				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p style="color: black;">'+row.expAmt+' '+row.currencyName+'</P>').appendTo(rowss); 	
 				}else{
-				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p>'+row.expAmt+' '+row.currencyName+'</P><img src="images/attach.png" width="25px" height="25px">').appendTo(rowss); 
+				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p style="color: black;">'+row.expAmt+' '+row.currencyName+'</P><img src="images/attach.png" width="25px" height="25px">').appendTo(rowss); 
 				}
 				j('<td></td>').attr({ class: ["expDate1","displayNone"].join(' ') }).text(row.expDate).appendTo(rowss);
 				j('<td></td>').attr({ class: ["expFromLoc1","displayNone"].join(' ') }).text(row.expFromLoc).appendTo(rowss);
@@ -1825,9 +1851,9 @@ function fetchEmployeeAdvance() {
    var rowThead = j("<thead></thead>").appendTo(table1);
 	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
 	
-	j('<th></th>').text("Voucher No.").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Voucher No.").appendTo(rowTh);
 	//j('<th></th>').text("Title").appendTo(rowTh);
-	j('<th></th>').text("Amount").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Amount").appendTo(rowTh);
 	 
     table2 = j('<table></table>').attr({ id: "source1",class:["table","table-striped","table-bordered"].join(' ') }).appendTo(mainTable);
     var rowThead1 = j("<thead></thead>").appendTo(table2);
@@ -1867,7 +1893,9 @@ function fetchEmployeeAdvance() {
 			}
 		 });
 	 });	 
-	 mainTable.appendTo("#box1");	 
+	 mainTable.appendTo("#box1");
+    var header = defaultPagePath+'backbtnPage.html';
+    j('#mainHeader').load(header);
  }
 
 
@@ -1877,9 +1905,359 @@ function deleteSelectedEmplAdv(employeeAdvDetailId){
 			});
 	  }
 
-//  sms changes
+ function showSyncMaster(){
+		var headerBackBtn=defaultPagePath+'backbtnPage.html';
+     var pageRef=defaultPagePath+'syncMaster.html';
+			j(document).ready(function() {
+				j('#mainHeader').load(headerBackBtn);
+				j('#mainContainer').load(pageRef);
+			});
+   appPageHistory.push(pageRef);
+	}
+
+function fetchBusinessExpNdEmployeeAdv() {
+  j('#source').remove();
+  mytable = j('<table></table>').attr({ id: "source",class: ["table","table-striped","table-bordered"].join(' ') });
+	var rowThead = j("<thead></thead>").appendTo(mytable);
+	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
+	
+	j('<th lang=\'en\'></th>').text("Date").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Expense Name").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Narration From/To Loc").appendTo(rowTh); 	
+	j('<th lang=\'en\'></th>').text("Amt").appendTo(rowTh);
+	var cols = new Number(5);
+	 
+	mydb.transaction(function(t) {
+		var headerOprationBtn;
+      t.executeSql('SELECT * FROM businessExpDetails INNER JOIN expNameMst ON businessExpDetails.expNameId =expNameMst.id INNER JOIN currencyMst ON businessExpDetails.currencyId =currencyMst.currencyId  INNER JOIN currencyConversionMst ON businessExpDetails.currencyId = currencyConversionMst.currencyId INNER JOIN accountHeadMst ON businessExpDetails.accHeadId =accountHeadMst.accountHeadId;', [],
+		 function(transaction, result) {
+		  if (result != null && result.rows != null) {
+			  
+			for (var i = 0; i < result.rows.length; i++) {
+				
+				var row = result.rows.item(i);
+				var shrinkFromTo;
+				var newDateFormat = reverseConvertDate(row.expDate.substring(0,2))+"-"+row.expDate.substring(3,5)+" "+row.expDate.substring(6,10); 
+				
+				if(window.localStorage.getItem("MobileMapRole") == 'true')
+				{
+					if(row.expFromLoc != '' && row.expToLoc != '')
+					{
+						var shrinkNarration = row.expNarration.substring(0,row.expNarration.indexOf("--"))
+						srinckFromTo = row.expFromLoc.substring(0,row.expFromLoc.indexOf(","))+"/"+row.expToLoc.substring(0,row.expToLoc.indexOf(","));
+						srinckFromTo = srinckFromTo.concat("...");
+					}
+				}
+				
+				var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
+                    j('<td></td>').attr({ class: ["expDate"].join(' ') }).html('<p style="color: black;">'+newDateFormat+'</P>').appendTo(rowss);	
+		        	j('<td></td>').attr({ class: ["expName"].join(' ') }).html('<p style="color: black;">'+row.expName+'</P>').appendTo(rowss).appendTo(rowss);
+			
+				if(window.localStorage.getItem("MobileMapRole") == 'true')
+				{
+					if(row.expFromLoc != '' && row.expToLoc != '')
+					{
+						j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p>'+shrinkNarration+'</br>'+srinckFromTo+ '</P>').appendTo(rowss);
+					}
+					else
+					{
+						j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p>'+row.expNarration+'</br>'+row.expFromLoc+""+row.expToLoc+ '</P>').appendTo(rowss);
+					}
+				}
+				else
+				{
+				   if(row.expFromLoc != '' && row.expToLoc != ''){
+                    j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</br>'+row.expFromLoc+"/"+row.expToLoc+ '</P>').appendTo(rowss);
+                    }else{
+                    j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</br>'+row.expFromLoc+""+row.expToLoc+ '</P>').appendTo(rowss);
+                    }
+				}
+				
+				if(row.busExpAttachment.length == 0){
+				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p>'+row.expAmt+' '+row.currencyName+'</P>').appendTo(rowss); 	
+				}else{
+				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p>'+row.expAmt+' '+row.currencyName+'</P><img src="images/attach.png" width="25px" height="25px">').appendTo(rowss); 
+				}
+				j('<td></td>').attr({ class: ["expDate1","displayNone"].join(' ') }).text(row.expDate).appendTo(rowss);
+				j('<td></td>').attr({ class: ["expFromLoc1","displayNone"].join(' ') }).text(row.expFromLoc).appendTo(rowss);
+				j('<td></td>').attr({ class: ["expToLoc1","displayNone"].join(' ') }).text(row.expToLoc).appendTo(rowss);
+				j('<td></td>').attr({ class: ["expNarration1","displayNone"].join(' ') }).text(row.expNarration).appendTo(rowss);
+				j('<td></td>').attr({ class: ["expAmt1","displayNone"].join(' ') }).text(row.expAmt).appendTo(rowss);
+				j('<td></td>').attr({ class: ["busAttachment","displayNone"].join(' ') }).text(row.busExpAttachment).appendTo(rowss);
+				j('<td></td>').attr({ class: ["accHeadId","displayNone"].join(' ') }).text(row.accHeadId).appendTo(rowss);			
+				j('<td></td>').attr({ class: ["expNameId","displayNone"].join(' ') }).text(row.expNameMstId).appendTo(rowss); 				
+				j('<td></td>').attr({ class: ["expUnit","displayNone"].join(' ') }).text(row.expUnit).appendTo(rowss); 				
+				j('<td></td>').attr({ class: ["currencyId","displayNone"].join(' ') }).text(row.currencyId).appendTo(rowss);
+                j('<td></td>').attr({ class: ["conversionRate","displayNone"].join(' ') }).text(row.conversionRate).appendTo(rowss); 
+				j('<td></td>').attr({ class: ["accountCodeId","displayNone"].join(' ') }).text(row.accCodeId).appendTo(rowss);		
+				//j('<td></td>').attr({ class: ["expName","displayNone"].join(' ') }).text(row.expName).appendTo(rowss);		
+				j('<td></td>').attr({ class: ["busExpId","displayNone"].join(' ') }).text(row.busExpId).appendTo(rowss);
+				j('<td></td>').attr({ class: ["isErReqd","displayNone"].join(' ') }).text(row.isErReqd).appendTo(rowss);
+				j('<td></td>').attr({ class: ["ERLimitAmt","displayNone"].join(' ') }).text(row.limitAmountForER).appendTo(rowss);
+				j('<td></td>').attr({ class: ["isEntitlementExceeded","displayNone"].join(' ') }).text(row.isEntitlementExceeded).appendTo(rowss);
+				j('<td></td>').attr({ class: ["wayPoint","displayNone"].join(' ') }).text(row.wayPointunitValue).appendTo(rowss);
+			}	
+					
+			j("#source tr").click(function(){ 
+				headerOprationBtn = defaultPagePath+'headerPageForBEOperation.html';
+				if(j(this).hasClass("selected")){
+					j(this).removeClass('selected');
+                    populateBEAmount();
+					j('#mainHeader').load(headerOprationBtn);
+				}else{                    
+				if(j(this).text()=='DateExpense NameNarration From/To LocAmt'){
+
+				}else{
+					j(this).addClass('selected');
+                    populateBEAmount();
+                    j('#mainHeader').load(headerOprationBtn);
+				}					
+				}								
+			});
+			}
+		 });
+	 });	 
+	 mytable.appendTo("#box");
+	j('#abc').remove();
+	mainTable = j('<table></table>').attr({id :"abc" ,class: ["table","table-striped","table-bordered"].join(' ') });
+    table1 = j('<table></table>').attr({ class: ["table","table1","table-striped","table-bordered"].join(' ') }).appendTo(mainTable);
+   var rowThead = j("<thead></thead>").appendTo(table1);
+	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
+	
+	j('<th lang=\'en\' ></th>').text("Voucher No.").appendTo(rowTh);
+	//j('<th></th>').text("Title").appendTo(rowTh);
+	j('<th lang=\'en\' ></th>').text("Amount").appendTo(rowTh);
+	 
+    table2 = j('<table></table>').attr({ id: "source1",class:["table","table-striped","table-bordered"].join(' ') }).appendTo(mainTable);
+    var rowThead1 = j("<thead></thead>").appendTo(table2);
+	mydb.transaction(function(t) {
+		var headerOprationBtn;
+      t.executeSql('SELECT * FROM employeeAdvanceDetails;', [],
+		 function(transaction, result) {
+		  if (result != null && result.rows != null) {
+			  
+			for (var i = 0; i < result.rows.length; i++) {
+				
+				var row = result.rows.item(i);
+		
+				var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead1);
+		
+              j('<td></td>').attr({ class: ["empAdvID","displayNone"].join(' ') }).text(row.empAdvID).appendTo(rowss);
+		      j('<td></td>').attr({ class: ["emplAdvVoucherNo"].join(' ')
+                                  }).text(row.emplAdvVoucherNo).appendTo(rowss);	
+              j('<td></td>').attr({ class: ["empAdvTitle","displayNone"].join(' ') }).text(row.empAdvTitle).appendTo(rowss);
+              j('<td></td>').attr({ class: ["Amount"].join(' ') }).text(row.Amount).appendTo(rowss);
+            }
+              $("#header tr").click(function() {
+                 $("tr").attr('onclick', '');
+               });
+					
+			j("#source1 tr").click(function(){ 
+				if(j(this).hasClass("selected")){
+					j(this).removeClass('selected');
+                    populateEAAmount();
+                    calculateAmount();
+				}else{
+					j(this).addClass('selected');
+                    populateEAAmount();
+                    calculateAmount();
+				}								
+			});
+			}
+		 });
+	 });	 
+	 mainTable.appendTo("#box1");
+    var header = defaultPagePath+'backbtnPage.html';
+    j('#mainHeader').load(header);
+ }
 
 
+function fetchExpenseClaimFromMain() {
+ j('#source').remove();
+	mytable = j('<table></table>').attr({ id: "source",class: ["table","table-striped","table-bordered"].join(' ') });
+	var rowThead = j("<thead></thead>").appendTo(mytable);
+	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
+	
+	j('<th lang=\'en\'></th>').text("Date").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Expense Name").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Narration From/To Loc").appendTo(rowTh); 	
+	j('<th lang=\'en\'></th>').text("Amt").appendTo(rowTh);
+	var cols = new Number(5);
+	 
+	mydb.transaction(function(t) {
+		var headerOprationBtn;
+      t.executeSql('SELECT * FROM businessExpDetails INNER JOIN expNameMst ON businessExpDetails.expNameId =expNameMst.id INNER JOIN currencyMst ON businessExpDetails.currencyId =currencyMst.currencyId INNER JOIN accountHeadMst ON businessExpDetails.accHeadId =accountHeadMst.accountHeadId;', [],
+		 function(transaction, result) {
+		  if (result != null && result.rows != null) {
+			  
+			for (var i = 0; i < result.rows.length; i++) {
+				
+				var row = result.rows.item(i);
+				var shrinkFromTo;
+				var newDateFormat = reverseConvertDate(row.expDate.substring(0,2))+"-"+row.expDate.substring(3,5)+" "+row.expDate.substring(6,10); 
+				
+				if(window.localStorage.getItem("MobileMapRole") == 'true')
+				{
+					if(row.expFromLoc != '' && row.expToLoc != '')
+					{
+						var shrinkNarration = row.expNarration.substring(0,row.expNarration.indexOf("--"))
+						srinckFromTo = row.expFromLoc.substring(0,row.expFromLoc.indexOf(","))+"/"+row.expToLoc.substring(0,row.expToLoc.indexOf(","));
+						srinckFromTo = srinckFromTo.concat("...");
+					}
+				}
+				
+				var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
+		
+		        	j('<td></td>').attr({ class: ["expDate"].join(' ') }).html('<p style="color: black;">'+newDateFormat+'</P>').appendTo(rowss);	
+		        	j('<td></td>').attr({ class: ["expName"].join(' ') }).html('<p style="color: black;">'+row.expName+'</P>').appendTo(rowss).appendTo(rowss);	
+				if(window.localStorage.getItem("MobileMapRole") == 'true')
+				{
+					if(row.expFromLoc != '' && row.expToLoc != '')
+					{
+						j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+shrinkNarration+'</br>'+srinckFromTo+ '</P>').appendTo(rowss);
+					}
+					else
+					{
+						j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</br>'+row.expFromLoc+""+row.expToLoc+ '</P>').appendTo(rowss);
+					}
+				}
+				else
+				{
+				   if(row.expFromLoc != '' && row.expToLoc != ''){
+                    j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</br>'+row.expFromLoc+"/"+row.expToLoc+ '</P>').appendTo(rowss);
+                    }else{
+                    j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p style="color: black;">'+row.expNarration+'</br>'+row.expFromLoc+""+row.expToLoc+ '</P>').appendTo(rowss);
+                    }
+				}
+				
+				if(row.busExpAttachment.length == 0){
+				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p style="color: black;">'+row.expAmt+' '+row.currencyName+'</P>').appendTo(rowss); 	
+				}else{
+				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p style="color: black;">'+row.expAmt+' '+row.currencyName+'</P><img src="images/attach.png" width="25px" height="25px">').appendTo(rowss); 
+				}
+				j('<td></td>').attr({ class: ["expDate1","displayNone"].join(' ') }).text(row.expDate).appendTo(rowss);
+				j('<td></td>').attr({ class: ["expFromLoc1","displayNone"].join(' ') }).text(row.expFromLoc).appendTo(rowss);
+				j('<td></td>').attr({ class: ["expToLoc1","displayNone"].join(' ') }).text(row.expToLoc).appendTo(rowss);
+				j('<td></td>').attr({ class: ["expNarration1","displayNone"].join(' ') }).text(row.expNarration).appendTo(rowss);
+				j('<td></td>').attr({ class: ["expAmt1","displayNone"].join(' ') }).text(row.expAmt).appendTo(rowss);
+				j('<td></td>').attr({ class: ["busAttachment","displayNone"].join(' ') }).text(row.busExpAttachment).appendTo(rowss);
+				j('<td></td>').attr({ class: ["accHeadId","displayNone"].join(' ') }).text(row.accHeadId).appendTo(rowss);			
+				j('<td></td>').attr({ class: ["expNameId","displayNone"].join(' ') }).text(row.expNameMstId).appendTo(rowss); 				
+				j('<td></td>').attr({ class: ["expUnit","displayNone"].join(' ') }).text(row.expUnit).appendTo(rowss); 				
+				j('<td></td>').attr({ class: ["currencyId","displayNone"].join(' ') }).text(row.currencyId).appendTo(rowss); 				
+				j('<td></td>').attr({ class: ["accountCodeId","displayNone"].join(' ') }).text(row.accCodeId).appendTo(rowss);		
+				//j('<td></td>').attr({ class: ["expName","displayNone"].join(' ') }).text(row.expName).appendTo(rowss);		
+				j('<td></td>').attr({ class: ["busExpId","displayNone"].join(' ') }).text(row.busExpId).appendTo(rowss);
+				j('<td></td>').attr({ class: ["isErReqd","displayNone"].join(' ') }).text(row.isErReqd).appendTo(rowss);
+				j('<td></td>').attr({ class: ["ERLimitAmt","displayNone"].join(' ') }).text(row.limitAmountForER).appendTo(rowss);
+				j('<td></td>').attr({ class: ["isEntitlementExceeded","displayNone"].join(' ') }).text(row.isEntitlementExceeded).appendTo(rowss);
+				j('<td></td>').attr({ class: ["wayPoint","displayNone"].join(' ') }).text(row.wayPointunitValue).appendTo(rowss);
+			}	
+					
+			j("#source tr").click(function(){ 
+				headerOprationBtn = defaultPagePath+'headerPageForBEOperation.html';
+				if(j(this).hasClass("selected")){ 
+					j(this).removeClass('selected');
+					j('#mainHeader').load(headerOprationBtn);
+				}else{
+				if(j(this).text()=='DateExpense NameNarration From/To LocAmt'){
+					
+				}else{
+					j('#mainHeader').load(headerOprationBtn);
+					j(this).addClass('selected');
+				}					
+				}								
+			});
+			}
+		 });
+	 });	 
+	 mytable.appendTo("#box");	
+    var header = defaultPagePath+'backbtnPage.html';
+    j('#mainHeader').load(header);
+ }
+
+function fetchTravelSettlementExpFromMain() {
+	j('#source').remove();
+	mytable = j('<table></table>').attr({ id: "source",class: ["table","table-striped","table-bordered"].join(' ') });
+	
+	var rowThead = j("<thead></thead>").appendTo(mytable);
+	var rowTh = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(rowThead);
+	
+	j('<th lang=\'en\'></th>').text("Date").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Expense Name").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Amt").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("cityTown").appendTo(rowTh);
+	j('<th lang=\'en\'></th>').text("Narration").appendTo(rowTh);
+	
+    var cols = new Number(4);
+	 
+	mydb.transaction(function(t) {
+		
+      t.executeSql('select * from travelSettleExpDetails inner join cityTownMst on cityTownMst.cityTownId = travelSettleExpDetails.cityTownId inner join currencyMst on travelSettleExpDetails.currencyId = currencyMst.currencyId inner join travelExpenseNameMst on travelExpenseNameMst.id = travelSettleExpDetails.expNameId;', [],
+		 function(transaction, result) {
+		 	
+		  if (result != null && result.rows != null) {
+			  
+			for (var i = 0; i < result.rows.length; i++) {
+				
+			  var row = result.rows.item(i);
+			  
+			  var newDateFormat = reverseConvertDate(row.expDate.substring(0,2))+"-"+row.expDate.substring(3,5)+" "+row.expDate.substring(6,10);	  
+			  
+			  var rowss = j('<tr></tr>').attr({ class: ["test"].join(' ') }).appendTo(mytable);
+                
+                j('<td></td>').attr({ class: ["expDate"].join(' ') }).html('<p style="color: black;">'+newDateFormat+'</P>').appendTo(rowss);	
+		        j('<td></td>').attr({ class: ["expenseName"].join(' ') }).html('<p style="color: black;">'+row.expenseName+'</P>').appendTo(rowss).appendTo(rowss);	
+				j('<td></td>').attr({ class: ["expAmt"].join(' ') }).html('<p>'+row.expAmt+' '+row.currencyName+'</P>').appendTo(rowss);
+				j('<td></td>').attr({ class: ["cityTownName"].join(' ') }).html('<p style="color: black;">'+row.cityTownName+'</P>').appendTo(rowss);
+				
+				if(row.tsExpAttachment.length == 0){
+				j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p>'+row.expNarration+'</P>').appendTo(rowss); 	
+				}else{
+				j('<td></td>').attr({ class: ["expNarration"].join(' ') }).html('<p>'+row.expNarration+'</P><img src="images/attach.png" width="25px" height="25px">').appendTo(rowss); 
+				}
+				j('<td></td>').attr({ class: ["expDate1","displayNone"].join(' ') }).text(row.expDate).appendTo(rowss);
+				j('<td></td>').attr({ class: ["expAmt1","displayNone"].join(' ') }).text(row.expAmt).appendTo(rowss);
+				j('<td></td>').attr({ class: ["expNarration1","displayNone"].join(' ') }).text(row.expNarration).appendTo(rowss);
+				j('<td></td>').attr({ class: ["travelRequestId","displayNone"].join(' ') }).text(row.travelRequestId).appendTo(rowss);
+				j('<td></td>').attr({ class: ["tsExpAttachment","displayNone"].join(' ') }).text(row.tsExpAttachment).appendTo(rowss);				
+				j('<td></td>').attr({ class: ["expNameId","displayNone"].join(' ') }).text(row.expenseNameId).appendTo(rowss); 				
+				j('<td></td>').attr({ class: ["expUnit","displayNone"].join(' ') }).text(row.expUnit).appendTo(rowss); 				
+				j('<td></td>').attr({ class: ["currencyId","displayNone"].join(' ') }).text(row.currencyId).appendTo(rowss);
+				j('<td></td>').attr({ class: ["modeId","displayNone"].join(' ') }).text(row.travelModeId).appendTo(rowss); 				
+				j('<td></td>').attr({ class: ["categoryId","displayNone"].join(' ') }).text(row.travelCategoryId).appendTo(rowss); 				
+				j('<td></td>').attr({ class: ["fromcityTownId","displayNone"].join(' ') }).text(row.cityTownId).appendTo(rowss); 				 				
+				j('<td></td>').attr({ class: ["accountCodeId","displayNone"].join(' ') }).text(row.accCodeId).appendTo(rowss);		
+				j('<td></td>').attr({ class: ["expName","displayNone"].join(' ') }).text(row.expenseName).appendTo(rowss);		
+				j('<td></td>').attr({ class: ["tsExpId","displayNone"].join(' ') }).text(row.tsExpId).appendTo(rowss);
+				j('<td></td>').attr({ class: ["isModeCategory","displayNone"].join(' ') }).text(row.isModeCategory).appendTo(rowss);
+				j('<td></td>').attr({ class: ["accountCodeId","displayNone"].join(' ') }).text(row.accountCodeId).appendTo(rowss);				
+			}	
+					
+			j("#source tr").click(function(){
+				headerOprationBtn = defaultPagePath+'headerPageForTSOperation.html';
+				if(j(this).hasClass("selected")){ 
+				var headerBackBtn=defaultPagePath+'headerPageForTSOperation.html';
+					j(this).removeClass('selected');
+					j('#mainHeader').load(headerBackBtn);
+				}else{
+					if(j(this).text()=='DateExpense NameAmtcityTownNarration'){
+						
+					}else{
+					j('#mainHeader').load(headerOprationBtn);
+					j(this).addClass('selected');
+					}
+				}								
+			});
+			}
+		 });
+	 });	 
+	 mytable.appendTo("#box");	 
+     var header = defaultPagePath+'backbtnPage.html';
+    j('#mainHeader').load(header);
+ }
+
+ //  SMS changes
 function saveSMS(sms){
 	j('#loading_Cat').show();
 	if (mydb) {
@@ -2062,3 +2440,14 @@ function synchronizeWhiteListMasterData() {
     }
 	
 }
+
+ function showMultiLanguag(){
+		var headerBackBtn=defaultPagePath+'backbtnPage.html';
+    // var pageRef=defaultPagePath+'helpMenuPage.html';
+     var pageRef=defaultPagePath+'multiLanguage.html';
+			j(document).ready(function() {
+				j('#mainHeader').load(headerBackBtn);
+				j('#mainContainer').load(pageRef);
+			});
+   appPageHistory.push(pageRef);
+	}

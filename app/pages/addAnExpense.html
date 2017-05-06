@@ -1,4 +1,6 @@
-      <div class="modal-body clearfix">
+
+<br>
+<div class="modal-body clearfix">
         <div class="row">
           <div class="col-lg-12 clearfix addanexpense">
             <h1>Add Business Expense</h1>
@@ -15,7 +17,7 @@
                 <li>
                   <input id="expenseName" type="hidden" style="width: 98%">
                 </li>
-		<li>
+		        <li>
                   <input id="ratePerUnit" type="hidden" >
                 </li>
                 <li>
@@ -28,7 +30,7 @@
                 
 				<li>
 				  <p><font face="verdana" size="1" color="green">Unit is no. of persons/Kms/meals etc.</font></span></p>
-                  <input id="expUnit" type="tel" style="width: 22%" placeholder="Units" onkeyup="calculatePerUnit();checkPerUnitExceptionStatusForBEAtLineLevel();">
+                  <input id="expUnit" type="tel" style="width: 22%" placeholder="Units" onkeyup="calculatePerUnit();">
 		  <input id="wayPointunitValue" value="" readonly="readonly" type="hidden">
 		  <input id="expAmt" type="tel" style="width: 38%" placeholder="Amount" onkeyup="checkPerUnitExceptionStatusForBEAtLineLevel();validate();">
                   <input id="currency" type="hidden" style="width: 33%">
@@ -54,7 +56,7 @@
            </div>
 		   <div style="text-align:center;">
             <button class="btn btn-primary btn-lg " style="width: 40%;height: 52px;" onclick="saveBusinessDetails(0);">Save &amp; New</button>
-            <button class="btn btn-primary btn-lg " style="width: 40%" onclick="saveBusinessDetails(1);">Save &amp; Go to Synch</button>
+            <button class="btn btn-primary btn-lg " style="width: 40%" onclick="saveBusinessDetails(1);">Save &amp; Go to Sync</button>
 			</div>
           </div>
           </div>
@@ -69,12 +71,11 @@
 		    <div id="map" style="width:285px;height:400px"></div>
 		</div>
       </div>
-	  <script>
-	expensePageFlag = 'N';
-	var currentMonth;
-	var currentDate;
-	var currentYear;
-	 $(function() { 
+      <script>
+var currentMonth;
+var currentDate;
+var currentYear;
+		 $(function() { 
 		var date = new Date();
 		 currentMonth = date.getMonth();
 		 currentDate = date.getDate();
@@ -93,7 +94,7 @@
      j("#expenseName").change(function() {
       getPerUnitBasedOnExpense();
   });
-		onloadExpense();
+   onloadExpense();
 	function validate()
 	{
 		var field = document.getElementById("expAmt");
@@ -104,4 +105,4 @@
 			return false;
 		}
 	}
-	  </script> 
+</script> 

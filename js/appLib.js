@@ -58,6 +58,8 @@ var app = {
 			cordova.plugins.backgroundMode.on('deactivate', function () {
 			    cordova.plugins.notification.badge.clear();
 			});
+			cordova.plugins.backgroundMode.overrideBackButton();
+			alert(cordova.plugins.backgroundMode.isActive());
 		  }
 };
 

@@ -3047,7 +3047,7 @@ function saveIncomingSMSOnLocal(e){
 		// || senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){
 		// console.log("inside if condition")
 		// if(smsFilterBox(sms.body))
-			cordova.plugins.backgroundMode.wakeUp();
+			// cordova.plugins.backgroundMode.wakeUp();
 			saveSMS(sms);     
 	// }
 }

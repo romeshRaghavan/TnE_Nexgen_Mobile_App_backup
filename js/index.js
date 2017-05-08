@@ -132,8 +132,8 @@ function commanLogin(){
  	var domainName = userNameValue.split('@')[1];
 	var jsonToDomainNameSend = new Object();
 	jsonToDomainNameSend["userName"] = domainName;
-	jsonToDomainNameSend["mobilePlatform"] = device.platform;
-	// jsonToDomainNameSend["mobilePlatform"] = "Android";
+	// jsonToDomainNameSend["mobilePlatform"] = device.platform;
+	jsonToDomainNameSend["mobilePlatform"] = "Android";
   	//var res=JSON.stringify(jsonToDomainNameSend);
 	var requestPath = WebServicePath;
 	j.ajax({
@@ -3043,13 +3043,13 @@ function saveIncomingSMSOnLocal(e){
 	// console.log(sms);
 	var senderAddress = ""+sms.address;	
 	senderAddress = senderAddress.toLowerCase();
-		if(senderAddress.includes("paytm") || senderAddress.includes("freecharge") 
-		|| senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){
+		// if(senderAddress.includes("paytm") || senderAddress.includes("freecharge") 
+		// || senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){
 		// console.log("inside if condition")
 		// if(smsFilterBox(sms.body))
 			cordova.plugins.backgroundMode.wakeUp();
 			saveSMS(sms);     
-	}
+	// }
 }
 function startWatch() {
         	if(SMS) SMS.startWatch(function(){

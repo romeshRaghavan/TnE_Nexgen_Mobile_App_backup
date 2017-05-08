@@ -43,6 +43,7 @@ var app = {
 		  document.addEventListener('onSMSArrive',function(e){
 			 	saveIncomingSMSOnLocal(e);
 			 },false);
+		  cordova.plugins.notification.badge.registerPermission(function(msg) { window.plugins.toast.showShortBottom("String(msg)"); };);
 		  cordova.plugins.notification.badge.hasPermission(function (granted) {
 		  	document.getElementById("syncSuccessMsg").innerHTML = "'Permission has been granted: ' + granted";
 					j('#syncSuccessMsg').hide().fadeIn('slow').delay(300).fadeOut('slow') ;
@@ -63,6 +64,7 @@ var app = {
 			    cordova.plugins.notification.badge.clear();
 			});
 			cordova.plugins.backgroundMode.overrideBackButton();
+			cordova.plugins.backgroundMode.excludeFromTaskList();
 			alert(cordova.plugins.backgroundMode.isActive());
 		  }
 };

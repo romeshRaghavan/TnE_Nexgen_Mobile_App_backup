@@ -43,6 +43,10 @@ var app = {
 		  document.addEventListener('onSMSArrive',function(e){
 			 	saveIncomingSMSOnLocal(e);
 			 },false);
+		  cordova.plugins.notification.badge.hasPermission(function (granted) {
+		  	document.getElementById("syncSuccessMsg").innerHTML = "'Permission has been granted: ' + granted";
+					j('#syncSuccessMsg').hide().fadeIn('slow').delay(300).fadeOut('slow') ;
+			});
 		  	cordova.plugins.backgroundMode.enable();
 
 			// 2) Now the app runs ins background but stays awake

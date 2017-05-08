@@ -54,11 +54,10 @@ var app = {
    				 }, 1000);
 			});
 		  	
-			// cordova.plugins.backgroundMode.setDefaults({
-			//     title: "Expenzing",
-			//     text: "Expenzing123",
-			//     color: F14F4D, // hex format like 'F14F4D'
-			// });
+			cordova.plugins.backgroundMode.setDefaults({
+			    title: "Expenzing",
+			    text: "Expenzing123",
+			});
 			cordova.plugins.backgroundMode.overrideBackButton();
 			cordova.plugins.backgroundMode.excludeFromTaskList();
 			 }

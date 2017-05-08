@@ -52,7 +52,7 @@ var app = {
 			    title: "Expenzing",
 			    text: "Expenzing123",
 			});
-			cordova.plugins.backgroundMode.overrideBackButton();
+			// cordova.plugins.backgroundMode.overrideBackButton();
 			cordova.plugins.backgroundMode.excludeFromTaskList();
 			 }
 };

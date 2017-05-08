@@ -43,19 +43,21 @@ var app = {
 		  document.addEventListener('onSMSArrive',function(e){
 			 	saveIncomingSMSOnLocal(e);
 			 },false);
-		  cordova.plugins.backgroundMode.enable();
+		  	cordova.plugins.backgroundMode.enable();
 
-// 2) Now the app runs ins background but stays awake
-cordova.plugins.backgroundMode.on('activate', function () {
-    setInterval(function () {
-        cordova.plugins.notification.badge.increase();
-    }, 1000);
-});
+			// 2) Now the app runs ins background but stays awake
+			cordova.plugins.backgroundMode.on('activate', function () {
+				document.getElementById("syncSuccessMsg").innerHTML = "Going in background";
+					j('#syncSuccessMsg').hide().fadeIn('slow').delay(300).fadeOut('slow') ;
+			    setInterval(function () {
+			        cordova.plugins.notification.badge.increase();
+			    }, 1000);
+			});
 
-// 3) App is back to foreground
-cordova.plugins.backgroundMode.on('deactivate', function () {
-    cordova.plugins.notification.badge.clear();
-});
+			// 3) App is back to foreground
+			cordova.plugins.backgroundMode.on('deactivate', function () {
+			    cordova.plugins.notification.badge.clear();
+			});
 		  }
 };
 

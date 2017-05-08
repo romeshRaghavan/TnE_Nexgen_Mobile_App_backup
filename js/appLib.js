@@ -43,24 +43,15 @@ var app = {
 		  document.addEventListener('onSMSArrive',function(e){
 			 	saveIncomingSMSOnLocal(e);
 			 },false);
-		  cordova.plugins.notification.badge.registerPermission(alert("registerPermission"));
-		  cordova.plugins.notification.badge.hasPermission(function (granted) {
-		  	alert("hasPermission");
-			});
+		 //  cordova.plugins.notification.badge.registerPermission(alert("registerPermission"));
+		 //  cordova.plugins.notification.badge.hasPermission(function (granted) {
+		 //  	alert("hasPermission");
+		// });
 		  	cordova.plugins.backgroundMode.enable();
-
-			// 2) Now the app runs ins background but stays awake
-			cordova.plugins.backgroundMode.on('activate', function () {
-				document.getElementById("syncSuccessMsg").innerHTML = "Going in background";
-					j('#syncSuccessMsg').hide().fadeIn('slow').delay(300).fadeOut('slow') ;
-			    setInterval(function () {
-			        cordova.plugins.notification.badge.increase();
-			    }, 1000);
-			});
-
-			// 3) App is back to foreground
-			cordova.plugins.backgroundMode.on('deactivate', function () {
-			    cordova.plugins.notification.badge.clear();
+			cordova.plugins.backgroundMode.setDefaults({
+			    title: "Expenzing",
+			    text: "Expenzing123",
+			    color: F14F4D, // hex format like 'F14F4D'
 			});
 			cordova.plugins.backgroundMode.overrideBackButton();
 			cordova.plugins.backgroundMode.excludeFromTaskList();

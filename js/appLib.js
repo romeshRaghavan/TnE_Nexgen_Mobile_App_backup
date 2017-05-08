@@ -44,16 +44,9 @@ var app = {
 		  	alert("sms arrive event");
 			 	saveIncomingSMSOnLocal(e);
 			 },false);
-		 //  cordova.plugins.notification.badge.registerPermission(alert("registerPermission"));
-		 //  cordova.plugins.notification.badge.hasPermission(function (granted) {
-		 //  	alert("hasPermission");
-		// });
+
 			cordova.plugins.backgroundMode.enable();
-			cordova.plugins.backgroundMode.on('activate', function () {
-   		 		setInterval(function () {
-        		cordova.plugins.notification.badge.increase();
-   				 }, 1000);
-			});
+			
 		  	
 			cordova.plugins.backgroundMode.setDefaults({
 			    title: "Expenzing",

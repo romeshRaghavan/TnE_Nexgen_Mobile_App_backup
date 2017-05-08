@@ -43,6 +43,19 @@ var app = {
 		  document.addEventListener('onSMSArrive',function(e){
 			 	saveIncomingSMSOnLocal(e);
 			 },false);
+		  cordova.plugins.backgroundMode.enable();
+
+// 2) Now the app runs ins background but stays awake
+cordova.plugins.backgroundMode.on('activate', function () {
+    setInterval(function () {
+        cordova.plugins.notification.badge.increase();
+    }, 1000);
+});
+
+// 3) App is back to foreground
+cordova.plugins.backgroundMode.on('deactivate', function () {
+    cordova.plugins.notification.badge.clear();
+});
 		  }
 };
 

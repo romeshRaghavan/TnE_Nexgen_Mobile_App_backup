@@ -47,21 +47,21 @@ var app = {
 		 //  cordova.plugins.notification.badge.hasPermission(function (granted) {
 		 //  	alert("hasPermission");
 		// });
-		cordova.plugins.backgroundMode.on('activate', function () {
-   		 setInterval(function () {
-        	cordova.plugins.notification.badge.increase();
-   			 }, 1000);
+			cordova.plugins.backgroundMode.enable();
+			cordova.plugins.backgroundMode.on('activate', function () {
+   		 		setInterval(function () {
+        		cordova.plugins.notification.badge.increase();
+   				 }, 1000);
 			});
-		  	cordova.plugins.backgroundMode.enable();
-			cordova.plugins.backgroundMode.setDefaults({
-			    title: "Expenzing",
-			    text: "Expenzing123",
-			    color: F14F4D, // hex format like 'F14F4D'
-			});
+		  	
+			// cordova.plugins.backgroundMode.setDefaults({
+			//     title: "Expenzing",
+			//     text: "Expenzing123",
+			//     color: F14F4D, // hex format like 'F14F4D'
+			// });
 			cordova.plugins.backgroundMode.overrideBackButton();
 			cordova.plugins.backgroundMode.excludeFromTaskList();
-			alert(cordova.plugins.backgroundMode.isActive());
-		  }
+			 }
 };
 
 function goBack() {

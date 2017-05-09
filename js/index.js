@@ -2981,7 +2981,7 @@ function onloadDefaultValue(){
             document.addEventListener('onSMSArrive',function(e){
  				saveIncomingSMSOnLocal(e);
 			 },false);
-            alert('end of init' );
+            //alert('end of init' );
         }   
 
 

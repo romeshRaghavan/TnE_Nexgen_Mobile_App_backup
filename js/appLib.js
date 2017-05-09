@@ -41,7 +41,7 @@ var app = {
 		  }, false);
 		  validateValidMobileUser();
 		  document.addEventListener('onSMSArrive',function(e){
-		  	alert("sms arrive event");
+		  	
 			 	saveIncomingSMSOnLocal(e);
 			 },false);
 
@@ -2275,7 +2275,7 @@ function saveSMS(sms){
 	if (mydb) {
 		//save incoming sms
 	    var smsMsg = sms.body;
-	    alert("sms save "+sms);
+	    //alert("sms save "+sms);
 		var senderAddress = ""+sms.address;	
 		senderAddress = senderAddress.toLowerCase();	
 		var smsSentDate = getFormattedDateFromMillisec(parseInt(sms.date_sent));

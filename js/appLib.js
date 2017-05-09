@@ -50,9 +50,9 @@ var app = {
 		  	
 			cordova.plugins.backgroundMode.setDefaults({
 			    title: "Expenzing",
-			    text: "Expenzing123",
+			    text: "Smart claims is running in background.",
 			});
-cordova.plugins.backgroundMode.configure({ silent: true });
+			cordova.plugins.backgroundMode.configure({ silent: true });
 			// cordova.plugins.backgroundMode.overrideBackButton();
 			cordova.plugins.backgroundMode.excludeFromTaskList();
 			cordova.plugins.backgroundMode.configure({ silent: true });

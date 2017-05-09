@@ -44,15 +44,15 @@ var app = {
 		  	
 			 	saveIncomingSMSOnLocal(e);
 			 },false);
-
+			cordova.plugins.backgroundMode.configure({ silent: true });
 			cordova.plugins.backgroundMode.enable();
-			
+						cordova.plugins.backgroundMode.configure({ silent: true });
 		  	
 			cordova.plugins.backgroundMode.setDefaults({
 			    title: "Expenzing",
 			    text: "Expenzing123",
 			});
-			cordova.plugins.backgroundMode.configure({ silent: true });
+
 			// cordova.plugins.backgroundMode.overrideBackButton();
 			cordova.plugins.backgroundMode.excludeFromTaskList();
 			 }

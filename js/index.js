@@ -3229,8 +3229,10 @@ function parseSMS(smsBody) {
 			
 			
 			if(currencyFoundAt>=0 && keywordsFoundAt>=0) {
+                alert("true");
 				return true;
 			} else {
+                alert("false");
 				return false;
 			}
 		}

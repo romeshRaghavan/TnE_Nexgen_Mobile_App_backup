@@ -2,9 +2,9 @@ var j = jQuery.noConflict();
 var defaultPagePath='app/pages/';
 var headerMsg = "Expenzing";
 var urlPath;
-//var WebServicePath ='http://1.255.255.214:8085/NexstepWebService/mobileLinkResolver.service';
+var WebServicePath ='http://1.255.255.122:8085/NexstepWebService/mobileLinkResolver.service';
 // var WebServicePath = 'http://live.nexstepapps.com:8284/NexstepWebService/mobileLinkResolver.service';
-var WebServicePath ='http://1.255.255.36:9898/NexstepWebService/mobileLinkResolver.service';
+//var WebServicePath ='http://1.255.255.36:9898/NexstepWebService/mobileLinkResolver.service';
 var clickedFlagCar = false;
 var clickedFlagTicket = false;
 var clickedFlagHotel = false;
@@ -3043,13 +3043,13 @@ function saveIncomingSMSOnLocal(e){
 	// console.log(sms);
 	var senderAddress = ""+sms.address;	
 	senderAddress = senderAddress.toLowerCase();
-		if(senderAddress.includes("paytm") || senderAddress.includes("freecharge") || senderAddress.includes("swiggy")
-			|| senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){
+/*		if(senderAddress.includes("paytm") || senderAddress.includes("freecharge") || senderAddress.includes("swiggy")
+			|| senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){*/
 		 // console.log("inside if condition")
 		if(smsFilterBox(sms.body))
 			// cordova.plugins.backgroundMode.wakeUp();
 			saveSMS(sms);     
-	}
+	//}
 }
 function startWatch() {
         	if(SMS) SMS.startWatch(function(){
@@ -3065,13 +3065,22 @@ function startWatch() {
 
 function parseIncomingSMSForAmount(input){
 	var amount= "";
+    var amountFound = false;
 	if(input.includes("Rs.")){
         var msg = input.split("Rs.")
 
         var test  =  msg[1];
 		var rsExtractStr = test.trim().split(" ");
 		amount = rsExtractStr[0];
+        amountFound = true;
 	}
+    
+    if(amountFound == false && input.includes("Rs")){
+        var msg = input.split("Rs");
+        var test  =  msg[1];
+		var rsExtractStr = test.trim().split(" ");
+		amount = rsExtractStr[0];
+    }
 	return amount;
 }
 
@@ -3147,7 +3156,7 @@ function smsFilterBox(smsText){
 		}
 	}
 	if(!blockedFlag){
-		var allowedWords = allowedWordsStr.split("$");
+	/*	var allowedWords = allowedWordsStr.split("$");
 		for (var i = 0; i < allowedWords.length-1; i++) {
 			var word = allowedWords[i].toLowerCase();
 			//console.log("allowed  "+word)
@@ -3156,12 +3165,70 @@ function smsFilterBox(smsText){
 				returnFlag = true;
 				break;
 			}
-		}
+		}*/
+        returnFlag = parseSMS(smsText);
 	}else{
 		returnFlag = false;
 	}
 	return returnFlag;
 }
+
+
+function parseSMS(smsBody) {
+
+			//flags
+			var currencyFoundAt = -1;
+			var keywordsFoundAt = -1;
+			var paidToFoundAt = -1;
+			
+			//Keywords list
+			var currencies = [
+						"rs.",
+						"rs",
+						"inr"
+						];
+						
+			var keywords = [
+						"spent",
+						"deducted",
+						"paid"
+						];
+						
+			var paidTo = [
+						"to",
+						"at"
+						];
+						
+						
+			for (i = 0; i < currencies.length; i++) { 
+				currencyFoundAt = smsBody.indexOf(currencies[i]);
+				if(currencyFoundAt>=0) {
+					break;
+				}
+			}
+			
+			for (i = 0; i < keywords.length; i++) { 
+				keywordsFoundAt = smsBody.indexOf(keywords[i]);
+				if(keywordsFoundAt>=0) {
+					break;
+				}
+			}
+			
+			for (i = 0; i < paidTo.length; i++) { 
+				paidToFoundAt = smsBody.indexOf(paidTo[i]);
+				if(paidToFoundAt>=0) {
+					break;
+				}
+			}
+			
+			
+			if(currencyFoundAt>=0 && keywordsFoundAt>=0) {
+				return true;
+			} else {
+				return null;
+			}
+		}
+
 
 function getExpenseDateFromSMS(input){
 	// converts date from dd-MMM-yyyy to mm/dd/yyyy 

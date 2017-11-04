@@ -3040,14 +3040,17 @@ function viewMessages(){
 function saveIncomingSMSOnLocal(e){
 	var sms =e.data;
 	smsList.push(sms);
-	// console.log(sms);
+	alert(sms);
 	var senderAddress = ""+sms.address;	
 	senderAddress = senderAddress.toLowerCase();
+    alert(senderAddress);
+    alert(sms.body);
 /*		if(senderAddress.includes("paytm") || senderAddress.includes("freecharge") || senderAddress.includes("swiggy")
 			|| senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){*/
 		 // console.log("inside if condition")
 		//if(smsFilterBox(sms.body))
-			 cordova.plugins.backgroundMode.wakeUp();
+			// cordova.plugins.backgroundMode.wakeUp();
+    alert("saving sms");
 			saveSMS(sms);     
 	//}
 }

@@ -3046,7 +3046,7 @@ function saveIncomingSMSOnLocal(e){
 /*		if(senderAddress.includes("paytm") || senderAddress.includes("freecharge") || senderAddress.includes("swiggy")
 			|| senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){*/
 		 // console.log("inside if condition")
-		if(smsFilterBox(sms.body))
+		//if(smsFilterBox(sms.body))
 			// cordova.plugins.backgroundMode.wakeUp();
 			saveSMS(sms);     
 	//}

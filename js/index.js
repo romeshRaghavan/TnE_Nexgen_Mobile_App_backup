@@ -3204,6 +3204,7 @@ function parseSMS(smsBody) {
 						
 						
 			for (i = 0; i < currencies.length; i++) { 
+				//console.log(currencies[i]);
 				currencyFoundAt = smsBody.indexOf(currencies[i]);
 				if(currencyFoundAt>=0) {
 					break;
@@ -3211,6 +3212,7 @@ function parseSMS(smsBody) {
 			}
 			
 			for (i = 0; i < keywords.length; i++) { 
+				//console.log(keywords[i]);
 				keywordsFoundAt = smsBody.indexOf(keywords[i]);
 				if(keywordsFoundAt>=0) {
 					break;
@@ -3218,6 +3220,7 @@ function parseSMS(smsBody) {
 			}
 			
 			for (i = 0; i < paidTo.length; i++) { 
+				//console.log(paidTo[i]);
 				paidToFoundAt = smsBody.indexOf(paidTo[i]);
 				if(paidToFoundAt>=0) {
 					break;
@@ -3228,7 +3231,7 @@ function parseSMS(smsBody) {
 			if(currencyFoundAt>=0 && keywordsFoundAt>=0) {
 				return true;
 			} else {
-				return null;
+				return false;
 			}
 		}
 

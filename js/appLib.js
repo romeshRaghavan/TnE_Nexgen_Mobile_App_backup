@@ -2466,3 +2466,44 @@ function synchronizeWhiteListMasterData() {
 			});
    appPageHistory.push(pageRef);
 	}
+
+
+function getExpenseNamesfromDBForSmartExpense(accountHeadId){
+	j('#errorMsgArea').children('span').text("");
+ if (mydb) {
+        //Get all the employeeDetails from the database with a select statement, set outputEmployeeDetails as the callback function for the executeSql command
+        mydb.transaction(function (t) {
+			t.executeSql("SELECT * FROM expNameMst where accHeadId="+accountHeadId, [], getExpNameListForSmartExpense);
+		});
+    } else {
+         alert(window.lang.translate('Database not found, your browser does not support web sql!'));
+    }	
+}
+
+function getExpNameListForSmartExpense(transaction, results) {
+    var i;
+	var jsonExpNameArr = [];
+	
+	for (i = 0; i < results.rows.length; i++) {
+        var row = results.rows.item(i);
+		var jsonFindExpNameHead = new Object();
+
+		jsonFindExpNameHead["ExpenseID"] = row.id;
+		jsonFindExpNameHead["ExpenseName"] = row.expName;
+		
+		jsonExpNameArr.push(jsonFindExpNameHead);
+	}
+	createExpNameDropDownForSmartExpense(jsonExpNameArr);
+}
+
+function getPerUnitFromDBForSmartExpense(expenseNameID){
+	j('#errorMsgArea').children('span').text("");
+	if(mydb) {
+ 		//Get all the employeeDetails from the database with a select statement, set outputEmployeeDetails as the callback function for the executeSql command
+        mydb.transaction(function (t) {
+			t.executeSql("SELECT * FROM expNameMst where id="+expenseNameID, [], setPerUnitDetailsForSmartExpense);
+		});
+    } else {
+        alert(window.lang.translate('Database not found, your browser does not support web sql!'));
+    }	
+}

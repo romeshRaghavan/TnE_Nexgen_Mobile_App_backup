@@ -132,7 +132,7 @@ function commanLogin(){
  	var domainName = userNameValue.split('@')[1];
 	var jsonToDomainNameSend = new Object();
 	jsonToDomainNameSend["userName"] = domainName;
-	 jsonToDomainNameSend["mobilePlatform"] = device.platform;
+    jsonToDomainNameSend["mobilePlatform"] = device.platform;
 	//jsonToDomainNameSend["mobilePlatform"] = "Android";
   	//var res=JSON.stringify(jsonToDomainNameSend);
 	var requestPath = WebServicePath;
@@ -476,7 +476,9 @@ j.ajax({
 }
 
 function createAccHeadDropDown(jsonAccHeadArr){
+    
 	var jsonArr = [];
+    
 			if(jsonAccHeadArr != null && jsonAccHeadArr.length > 0){
 				for(var i=0; i<jsonAccHeadArr.length; i++ ){
 					var stateArr = new Array();
@@ -495,10 +497,11 @@ function createAccHeadDropDown(jsonAccHeadArr){
 			j("#accountHead").select2({
 				data:{ results: jsonArr, text: 'name' },
 				minimumResultsForSearch: -1,
-				initSelection: function (element, callback) {
+                placeholder : "Select Account Head",
+				/*initSelection: function (element, callback) {
 					callback(jsonArr[1]);
-					getExpenseNamesBasedOnAccountHead();
-				},
+					getExpenseNamesBasedOnAccountHead(jsonArr[1]);
+				},*/
 				formatResult: function(result) {
 					if ( ! isJsonString(result.id))
 						result.id = JSON.stringify(result.id);
@@ -549,6 +552,7 @@ function createExpNameDropDown(jsonExpNameArr){
 	j("#expenseName").select2({
 		data:{ results: jsonExpArr, text: 'name' },
 		minimumResultsForSearch: -1,
+        placeholder : "Select Expense Name",
 		initSelection: function (element, callback) {
 			callback(jsonExpArr[0]);
 		},
@@ -1264,7 +1268,6 @@ function onloadTimePicker(){
  }
 
  function getExpenseNamesBasedOnAccountHead(){
-
  	var accountHeadID = j("#accountHead").select2('data').id;
       getExpenseNamesfromDB(accountHeadID);
  }
@@ -2998,7 +3001,7 @@ function onloadDefaultValue(){
 
 
 function viewMessages(){
-	/*var e = { "data" : {"address": "paytm", "body":"You have made payment of Rs.135.00 to om rest.", "date_sent":1482401219880}}
+	var e = { "data" : {"address": "paytm", "body":"You have made payment of Rs.135.00 to om rest.", "date_sent":1482401219880}}
 	 saveIncomingSMSOnLocal(e);
 	 var e1 = { "data" : {"address": "freecharge", "body":"Recharge of BSNL mobile for Rs.54 was successful. operator refrence number is 0154324", "date_sent":1482601219880}}
 	 saveIncomingSMSOnLocal(e1);
@@ -3007,7 +3010,7 @@ function viewMessages(){
 	 var e3 = { "data" : {"address": "paytm", "body":"Hi,  your order #142592342342 of Rs. 2490 for 2 items is successful. we will let you know once seller ships it.", "date_sent":1482201219880}}
 	 saveIncomingSMSOnLocal(e3);
 	 var e4 = { "data" : {"address": "Creditcard", "body":"hi, payment of your electricity bill was successful for Rs.987.", "date_sent":1482101219880}}
-	 saveIncomingSMSOnLocal(e4);*/
+	 saveIncomingSMSOnLocal(e4);
 
 	 //console.log("viewMessages  "+filtersStr)
     var headerBackBtn=defaultPagePath+'headerPageForSMSOperation.html';
@@ -3040,17 +3043,17 @@ function viewMessages(){
 function saveIncomingSMSOnLocal(e){
 	var sms =e.data;
 	smsList.push(sms);
-	alert(sms);
+	//alert(sms);
 	var senderAddress = ""+sms.address;	
 	senderAddress = senderAddress.toLowerCase();
-    alert(senderAddress);
-    alert(sms.body);
+    //alert(senderAddress);
+    //alert(sms.body);
 /*		if(senderAddress.includes("paytm") || senderAddress.includes("freecharge") || senderAddress.includes("swiggy")
 			|| senderAddress.includes("uber")|| senderAddress.includes("Creditcard")){*/
 		 // console.log("inside if condition")
 		if(smsFilterBox(sms.body)){
 			// cordova.plugins.backgroundMode.wakeUp();
-          alert("saving sms");
+         // alert("saving sms");
 			saveSMS(sms);   
         }
 	//}
@@ -3230,10 +3233,10 @@ function parseSMS(smsBody) {
 			
 			
 			if(currencyFoundAt>=0 && keywordsFoundAt>=0) {
-                alert("true");
+                //alert("true");
 				return true;
 			} else {
-                alert("false");
+               // alert("false");
 				return false;
 			}
 		}
@@ -3293,3 +3296,149 @@ function populateMainPage(){
     
          j('#loading').hide();
      }
+
+ function getExpenseNamesBasedOnAccountHeadForSmartExpense(){
+ 	var accountHeadID = j("#accountHead").select2('data').id;
+      getExpenseNamesfromDBForSmartExpense(accountHeadID);
+ }
+
+
+function createExpNameDropDownForSmartExpense(jsonExpNameArr){
+	var jsonExpArr = [];
+	if(jsonExpNameArr != null && jsonExpNameArr.length > 0){
+		for(var i=0; i<jsonExpNameArr.length; i++ ){
+			var stateArr = new Array();
+			stateArr = jsonExpNameArr[i];
+			jsonExpArr.push({id: stateArr.ExpenseID,name: stateArr.ExpenseName});
+		}
+	}
+	
+/*	document.getElementById("expFromLoc").value = "";
+	document.getElementById("expToLoc").value = "";
+	document.getElementById("expNarration").value = "";
+	document.getElementById("expUnit").value = "";
+	document.getElementById("expAmt").value = "";
+	$("a").click(function () { 
+		$("#mapLink").fadeTo("fast").removeAttr("href"); 
+	});*/
+	
+	j("#expenseName").select2({
+		data:{ results: jsonExpArr, text: 'name' },
+		minimumResultsForSearch: -1,
+        placeholder : "Select Expense Name",
+        
+		initSelection: function (element, callback) {
+			callback(jsonExpArr[0]);
+		},
+		formatResult: function(result) {
+			if ( ! isJsonString(result.id))
+				result.id = JSON.stringify(result.id);
+				return result.name;
+		}
+	}).select2("val","");
+}
+
+ function getPerUnitBasedOnExpenseForSmartExpense(){
+
+ 	var expenseNameID = j("#expenseName").select2('data').id;
+       getPerUnitFromDBForSmartExpense(expenseNameID);
+ }
+
+
+
+function setPerUnitDetailsForSmartExpense(transaction, results){
+ 		 
+	if(results!=null){
+		    var row = results.rows.item(0);
+		    perUnitDetailsJSON["expenseIsfromAndToReqd"]=row.expIsFromToReq;
+		    perUnitDetailsJSON["isUnitReqd"]=row.expIsUnitReq;
+		    perUnitDetailsJSON["expRatePerUnit"]=row.expRatePerUnit;
+		    perUnitDetailsJSON["expFixedOrVariable"]=row.expFixedOrVariable;
+		    perUnitDetailsJSON["expFixedLimitAmt"]=row.expFixedLimitAmt;
+		    perUnitDetailsJSON["expenseName"]=row.expName;
+			perUnitDetailsJSON["expPerUnitActiveInative"]=row.expPerUnitActiveInative;
+			perUnitDetailsJSON["isErReqd"]=row.isErReqd;
+			perUnitDetailsJSON["limitAmountForER"]=row.limitAmountForER;
+		    document.getElementById("ratePerUnit").value = row.expRatePerUnit;
+          /*document.getElementById("expAmt").value="";
+		    document.getElementById("expUnit").value="";
+			document.getElementById("expFromLoc").value = "";
+			document.getElementById("expToLoc").value = "";
+			document.getElementById("expNarration").value = "";
+			document.getElementById("expUnit").value = "";
+			document.getElementById("expAmt").value = "";*/
+		    if(perUnitDetailsJSON.expenseIsfromAndToReqd=='N'){
+				document.getElementById("expFromLoc").value="";
+				document.getElementById("expToLoc").value="";
+				document.getElementById("expFromLoc").disabled =true;
+				document.getElementById("expToLoc").disabled =true;
+				document.getElementById("expFromLoc").style.backgroundColor='#d1d1d1'; 
+				document.getElementById("expToLoc").style.backgroundColor='#d1d1d1';
+				document.getElementById("expNarration").disabled =false;
+				document.getElementById("expNarration").style.backgroundColor='#FFFFFF';
+				document.getElementById("mapImage").style.display= "none";
+			}else{
+				document.getElementById("expFromLoc").disabled =false;
+				document.getElementById("expToLoc").disabled =false;
+				document.getElementById("expFromLoc").value="";
+				document.getElementById("expToLoc").value="";
+				//document.getElementById("expNarration").value="";
+				document.getElementById("expFromLoc").style.backgroundColor='#FFFFFF'; 
+				document.getElementById("expToLoc").style.backgroundColor='#FFFFFF'; 
+				//alert(window.localStorage.getItem("MobileMapRole"))
+				if(window.localStorage.getItem("MobileMapRole") == 'true') 
+				{
+					attachGoogleSearchBox(document.getElementById("expFromLoc"));
+					attachGoogleSearchBox(document.getElementById("expToLoc"));
+					document.getElementById("mapImage").style.display="";
+					document.getElementById("expNarration").disabled =true;
+					document.getElementById("expNarration").style.backgroundColor='#d1d1d1';
+				} 
+			}
+			if(perUnitDetailsJSON.isUnitReqd=='Y'){
+				document.getElementById("expAmt").value="";
+				if(perUnitDetailsJSON.expFixedOrVariable=='V'){
+					flagForUnitEnable = true;
+					if(perUnitDetailsJSON.expenseIsfromAndToReqd=='Y' && window.localStorage.getItem("MobileMapRole") == 'true'){
+						document.getElementById("expUnit").disabled =true;
+						document.getElementById("expUnit").style.backgroundColor='#d1d1d1';
+					}
+					else{
+						document.getElementById("expUnit").disabled =false;
+						document.getElementById("expUnit").style.backgroundColor='#FFFFFF';
+					}
+					document.getElementById("expAmt").disabled =false;
+					document.getElementById("expAmt").style.backgroundColor='#FFFFFF';
+				}else{
+					flagForUnitEnable = true;
+					if(perUnitDetailsJSON.expenseIsfromAndToReqd=='Y' && window.localStorage.getItem("MobileMapRole") == 'true'){
+						document.getElementById("expUnit").disabled =true;
+						document.getElementById("expUnit").style.backgroundColor='#d1d1d1';
+					}
+					else{
+						document.getElementById("expUnit").disabled =false;
+						document.getElementById("expUnit").style.backgroundColor='#FFFFFF';
+					}
+					document.getElementById("expAmt").disabled =true;
+					document.getElementById("expAmt").style.backgroundColor='#d1d1d1'; 
+				}
+			}else{
+				flagForUnitEnable = false;
+				document.getElementById("expUnit").disabled =true;
+				document.getElementById("expUnit").style.backgroundColor='#d1d1d1'; 
+				document.getElementById("expAmt").disabled =false;
+				document.getElementById("expAmt").style.backgroundColor='#FFFFFF'; 
+			}
+			if(perUnitDetailsJSON.expPerUnitActiveInative=='1'){
+				flagForUnitEnable=false;
+				document.getElementById("expUnit").disabled =true;
+				document.getElementById("expAmt").disabled =false;
+				document.getElementById("expAmt").style.backgroundColor='#FFFFFF'; 
+				document.getElementById("expUnit").style.backgroundColor='#d1d1d1';
+			}
+		}else{
+
+			alert("Please Synch your expense Names to claim expense.");
+		}
+	
+}

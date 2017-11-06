@@ -1,7 +1,7 @@
 
 <div class="modal-body clearfix" style=" background-color: white;height: inherit;padding-top: 36px;" >
 <div class="row">
-<div class="col-lg-12 clearfix addanexpense">
+<div class="col-lg-12 clearfix addanexpense" style="padding-left: 15px; padding-right: 18px;">
 <h1>Add Business Expense</h1>
 <div class="expenseform clearfix" data-role="page" id="page1">
 <ul>
@@ -87,6 +87,7 @@
 			maxDate : new Date(currentYear, currentMonth, currentDate)
 		});
 	});
+    onloadExpense();
 	currentMonth = currentMonth + 1;
 	if (currentDate < 10) {
 		currentDate = '0' + currentDate
@@ -97,10 +98,10 @@
 	
 	//document.getElementById("expDate").value = currentMonth + "/" + currentDate+ "/" + currentYear;
 	j("#accountHead").change(function() {
-		getExpenseNamesBasedOnAccountHead();
+		getExpenseNamesBasedOnAccountHeadForSmartExpense();
 	});
 	j("#expenseName").change(function() {
-		getPerUnitBasedOnExpense();
+		getPerUnitBasedOnExpenseForSmartExpense();
 	});
 	
 	function validate() {
@@ -113,7 +114,7 @@
 		}
 	}
 	j(document).ready(function() {	
-        onloadExpense();
+        
 		setTimeout(function(){
 			var amt =Math.round(smsSplitStr[3]); ;
 			document.getElementById("expDate").value = getExpenseDateFromSMS(smsSplitStr[2]);
@@ -121,8 +122,6 @@
 			document.getElementById("expAmt").value = amt;
 			document.getElementById("smsID").value = smsSplitStr[0];
 			document.getElementById("expUnit").value = '1';
-            j("#accountHead").select2("val", '1');
-            j("#expenseName").select2("val", '1');
-		 }, 500);
+		 }, 250);
 	});
 </script>

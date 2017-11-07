@@ -39,13 +39,14 @@ var app = {
 		  document.addEventListener("backbutton", function(e){
 			 goBackEvent();
 		  }, false);
-		  validateValidMobileUser();
+		  
 		  document.addEventListener('onSMSArrive',function(e){
+		  	alert("in onDeviceReady onSMSArrive");
 			 	saveIncomingSMSOnLocal(e);
 			 },false);
 			cordova.plugins.backgroundMode.configure({ silent: true });
 			cordova.plugins.backgroundMode.enable();
-			cordova.plugins.backgroundMode.configure({ silent: true });
+			//cordova.plugins.backgroundMode.configure({ silent: true });
 		  	
 			cordova.plugins.backgroundMode.setDefaults({
 			    title: "Expenzing",
@@ -54,9 +55,10 @@ var app = {
 			cordova.plugins.backgroundMode.configure({ silent: true });
 			// cordova.plugins.backgroundMode.overrideBackButton();
 			cordova.plugins.backgroundMode.excludeFromTaskList();
-			cordova.plugins.backgroundMode.configure({ silent: true });
+			//cordova.plugins.backgroundMode.configure({ silent: true });
         
-    
+           validateValidMobileUser();
+           alert("end");
 };
 
 function goBack() {

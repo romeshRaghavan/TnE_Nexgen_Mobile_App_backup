@@ -59,6 +59,7 @@ var app = {
         
            validateValidMobileUser();
            alert("end");
+    }
 };
 
 function goBack() {

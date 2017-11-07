@@ -3070,10 +3070,11 @@ function saveIncomingSMSOnLocal(e){
           alert('error list sms: ' + err);
           });
     
-			 }
+			 
 
 	//}
 }
+
 function startWatch() {
         	if(SMS) SMS.startWatch(function(){
         			window.localStorage.setItem("smsWatchStatus",true);

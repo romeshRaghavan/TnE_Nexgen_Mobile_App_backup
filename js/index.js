@@ -3013,6 +3013,7 @@ function viewMessages(){
 	 saveIncomingSMSOnLocal(e4);*/
 
 	 //console.log("viewMessages  "+filtersStr)
+     loadAllSMS();
     var headerBackBtn=defaultPagePath+'headerPageForSMSOperation.html';
     var pageRef=defaultPagePath+'fairMessageTable.html';
 	j(document).ready(function() {	

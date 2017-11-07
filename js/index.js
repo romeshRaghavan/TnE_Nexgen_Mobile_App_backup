@@ -3471,21 +3471,27 @@ function loadAllSMS(){
 
 function getSms(){
     alert("in getSms")
-/*      var filter = { box : 'inbox', // 'inbox' (default), 'sent', 'draft'
+    var filter = { box : 'inbox', // 'inbox' (default), 'sent', 'draft'
                      indexFrom : 0, // start from index 0
                      maxCount : 10, // count of SMS to return each time
                    };
 
            if(SMS) SMS.listSMS(filter, function(data){
-               alert("data>>>"+data);
-            alert("data>>>"+data.value);
+                alert("data>>>"+data);
+            	if(Array.isArray(data)) {
+        			for(var i in data) {
+        				var sms = data[i];
+        				smsList.push(sms);
+        				alert(sms.address + ": " + sms.body + "<br/>");
+        			}
+        		}
           },
 
           function(err){
           alert('error list sms: ' + err);
-          });*/
+          });
     
-    if(SMS) SMS.listSMS({}, function(data){
+/*    if(SMS) SMS.listSMS({}, function(data){
     			updateStatus('sms listed as json array');
     			//updateData( JSON.stringify(data) );
     			
@@ -3504,7 +3510,7 @@ function getSms(){
         		
         	}, function(err){
         		updateStatus('error list sms: ' + err);
-        	});
+        	});*/
     
     
     

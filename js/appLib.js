@@ -41,7 +41,6 @@ var app = {
 		  }, false);
 		  validateValidMobileUser();
 		  document.addEventListener('onSMSArrive',function(e){
-		  	
 			 	saveIncomingSMSOnLocal(e);
 			 },false);
 			cordova.plugins.backgroundMode.configure({ silent: true });

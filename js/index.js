@@ -3057,20 +3057,6 @@ function saveIncomingSMSOnLocal(e){
 			saveSMS(sms);   
         }
 
-      var filter = { box : 'inbox', // 'inbox' (default), 'sent', 'draft'
-                     indexFrom : 0, // start from index 0
-                     maxCount : 10, // count of SMS to return each time
-                   };
-
-           if(SMS) SMS.listSMS(filter, function(data){
-            alert("data>>>"+data);
-          },
-
-          function(err){
-          alert('error list sms: ' + err);
-          });
-    
-			 
 
 	//}
 }
@@ -3458,4 +3444,43 @@ function setPerUnitDetailsForSmartExpense(transaction, results){
 			alert("Please Synch your expense Names to claim expense.");
 		}
 	
+}
+
+function loadAllSMS(){
+    alert("in loadAllSMS")
+     document.addEventListener('onSMSArrive',function(e){
+		  	alert("in onDeviceReady onSMSArrive");
+			 	saveIncomingSMSOnLocal(e);
+			 },false);    
+            getSms();
+			cordova.plugins.backgroundMode.configure({ silent: true });
+			cordova.plugins.backgroundMode.enable();
+			//cordova.plugins.backgroundMode.configure({ silent: true });
+		  	
+			cordova.plugins.backgroundMode.setDefaults({
+			    title: "Expenzing",
+			    text: "Smart claims is running in background.",
+			});
+			cordova.plugins.backgroundMode.configure({ silent: true });
+			// cordova.plugins.backgroundMode.overrideBackButton();
+			cordova.plugins.backgroundMode.excludeFromTaskList();
+			//cordova.plugins.backgroundMode.configure({ silent: true });
+}
+
+
+function getSms(){
+    alert("in getSms")
+      var filter = { box : 'inbox', // 'inbox' (default), 'sent', 'draft'
+                     indexFrom : 0, // start from index 0
+                     maxCount : 10, // count of SMS to return each time
+                   };
+
+           if(SMS) SMS.listSMS(filter, function(data){
+               alert("data>>>"+data);
+            alert("data>>>"+data[0].value);
+          },
+
+          function(err){
+          alert('error list sms: ' + err);
+          });
 }

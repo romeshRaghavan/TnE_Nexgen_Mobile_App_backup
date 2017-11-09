@@ -1163,6 +1163,7 @@ function setUserSessionDetails(val,userJSON){
 	 window.localStorage.setItem("UserName",userJSON["user"]);
 	 window.localStorage.setItem("Password",userJSON["pass"]);
      window.localStorage.setItem("localLanguage",0);
+     window.localStorage.setItem("lastSmsId",0);
 	
 }
 

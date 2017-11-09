@@ -3472,8 +3472,8 @@ function loadAllSMS(){
 function getSms(){
     alert("in getSms")
     var filter = { box : 'inbox', // 'inbox' (default), 'sent', 'draft'
-                     indexFrom : 433, // start from index 0
-                     maxCount : 1, // count of SMS to return each time
+                     indexFrom : 0, // start from index 0
+                     //maxCount : 100, // count of SMS to return each time
                    };
 
            if(SMS) SMS.listSMS(filter, function(data){
@@ -3482,10 +3482,24 @@ function getSms(){
         			for(var i in data) {
         				var sms = data[i];
         				smsList.push(sms);
-        				alert("ADDRESS : "+sms.address + "\n Body : " + sms.body + "\n Date :"
+                        var lastSmsId =window.localStorage.getItem("lastSmsId");
+                        alert("in local lastSmsId : "+lastSmsId);
+                        if(lastSmsId <= sms._id){
+                            alert("in local lastSmsId : "+lastSmsId +" sms._id"+sms._id);
+                            if(smsFilterBox(sms.body)){
+                                alert("validated sms body : "sms.body);
+                            // cordova.plugins.backgroundMode.wakeUp();
+                            // alert("saving sms");
+                            saveSMS(sms); 
+                             
+                        }
+                        window.localStorage.setItem("lastSmsId",sms._id+1);
+                         alert(" new sms id : "+sms._id+1); 
+                        }
+/*        				alert("ADDRESS : "+sms.address + "\n Body : " + sms.body + "\n Date :"
                         + sms.date+" \n Date_sent"+sms.date_sent +"\n ID: "+ sms._id);
                         
-                        alert("date : "+ getFormattedDateFromMillisec(sms.date));
+                        alert("date : "+ getFormattedDateFromMillisec(sms.date));*/
         			}
         		}
           },

@@ -3485,7 +3485,7 @@ function getSms(){
         				alert("ADDRESS : "+sms.address + "\n Body : " + sms.body + "\n Date :"
                         + sms.date+" \n Date_sent"+sms.date_sent +"\n ID: "+ sms._id);
                         
-                        alert("date : "+ getFormattedDateFromMillisec(sms.data));
+                        alert("date : "+ getFormattedDateFromMillisec(sms.date));
         			}
         		}
           },

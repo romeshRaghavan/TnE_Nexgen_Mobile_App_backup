@@ -132,8 +132,8 @@ function commanLogin(){
  	var domainName = userNameValue.split('@')[1];
 	var jsonToDomainNameSend = new Object();
 	jsonToDomainNameSend["userName"] = domainName;
-    //jsonToDomainNameSend["mobilePlatform"] = device.platform;
-	jsonToDomainNameSend["mobilePlatform"] = "Android";
+    jsonToDomainNameSend["mobilePlatform"] = device.platform;
+	//jsonToDomainNameSend["mobilePlatform"] = "Android";
   	//var res=JSON.stringify(jsonToDomainNameSend);
 	var requestPath = WebServicePath;
 	j.ajax({
@@ -3472,7 +3472,7 @@ function loadAllSMS(){
 function getSms(){
     alert("in getSms")
     var filter = { box : 'inbox', // 'inbox' (default), 'sent', 'draft'
-                     indexFrom : 0, // start from index 0
+                   indexFrom : 0, // start from index 0
                      //maxCount : 100, // count of SMS to return each time
                    };
 
@@ -3481,9 +3481,11 @@ function getSms(){
             	if(Array.isArray(data)) {
         			for(var i in data) {
         				var sms = data[i];
-        				smsList.push(sms);
+        				//smsList.push(sms);
                         var lastSmsId =window.localStorage.getItem("lastSmsId");
                         alert("in local lastSmsId : "+lastSmsId);
+                        alert("ADDRESS : "+sms.address + "\n Body : " + sms.body + "\n Date :"
+                        + sms.date+" \n Date_sent"+sms.date_sent +"\n ID: "+ sms._id);
                         if(lastSmsId <= sms._id){
                             alert("in local lastSmsId : "+lastSmsId +" sms._id"+sms._id);
                             if(smsFilterBox(sms.body)){

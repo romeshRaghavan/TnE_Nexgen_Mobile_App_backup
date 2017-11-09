@@ -3478,11 +3478,11 @@ function getSms(){
 
            if(SMS) SMS.listSMS(filter, function(data){
                 alert("data>>>"+data);
+                var lastSmsId =window.localStorage.getItem("lastSmsId");
             	if(Array.isArray(data)) {
         			for(var i in data) {
         				var sms = data[i];
         				//smsList.push(sms);
-                        var lastSmsId =window.localStorage.getItem("lastSmsId");
                         alert("in local lastSmsId : "+lastSmsId);
                         alert("ADDRESS : "+sms.address + "\n Body : " + sms.body + "\n Date :"
                         + sms.date+" \n Date_sent"+sms.date_sent +"\n ID: "+ sms._id);

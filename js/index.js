@@ -3482,7 +3482,10 @@ function getSms(){
         			for(var i in data) {
         				var sms = data[i];
         				smsList.push(sms);
-        				alert(sms.address + ": " + sms.body + "<br/>");
+        				alert("ADDRESS : "+sms.address + "\n Body : " + sms.body + "\n Date :"
+                        + sms.data+" \n Date_sent"+sms.data_sent +"\n ID: "+ sms._id);
+                        
+                        alert("date : "+ getFormattedDateFromMillisec(sms.data));
         			}
         		}
           },

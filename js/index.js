@@ -132,8 +132,8 @@ function commanLogin(){
  	var domainName = userNameValue.split('@')[1];
 	var jsonToDomainNameSend = new Object();
 	jsonToDomainNameSend["userName"] = domainName;
-    jsonToDomainNameSend["mobilePlatform"] = device.platform;
-	//jsonToDomainNameSend["mobilePlatform"] = "Android";
+    //jsonToDomainNameSend["mobilePlatform"] = device.platform;
+	jsonToDomainNameSend["mobilePlatform"] = "Android";
   	//var res=JSON.stringify(jsonToDomainNameSend);
 	var requestPath = WebServicePath;
 	j.ajax({
@@ -3483,7 +3483,7 @@ function getSms(){
         				var sms = data[i];
         				smsList.push(sms);
         				alert("ADDRESS : "+sms.address + "\n Body : " + sms.body + "\n Date :"
-                        + sms.data+" \n Date_sent"+sms.data_sent +"\n ID: "+ sms._id);
+                        + sms.date+" \n Date_sent"+sms.date_sent +"\n ID: "+ sms._id);
                         
                         alert("date : "+ getFormattedDateFromMillisec(sms.data));
         			}

@@ -3472,8 +3472,8 @@ function loadAllSMS(){
 function getSms(){
     alert("in getSms")
     var filter = { box : 'inbox', // 'inbox' (default), 'sent', 'draft'
-                     indexFrom : 0, // start from index 0
-                     maxCount : 10, // count of SMS to return each time
+                     indexFrom : 433, // start from index 0
+                     maxCount : 1, // count of SMS to return each time
                    };
 
            if(SMS) SMS.listSMS(filter, function(data){

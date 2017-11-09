@@ -3487,7 +3487,7 @@ function getSms(){
                         if(lastSmsId <= sms._id){
                             alert("in local lastSmsId : "+lastSmsId +" sms._id"+sms._id);
                             if(smsFilterBox(sms.body)){
-                                alert("validated sms body : "sms.body);
+                                alert("validated sms body : "+sms.body);
                             // cordova.plugins.backgroundMode.wakeUp();
                             // alert("saving sms");
                             saveSMS(sms); 

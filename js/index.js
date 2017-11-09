@@ -3136,7 +3136,7 @@ function operationsOnSMS(){
 							  var smsSentDate = j(this).find('td.smsSentDate').text();
 							  var smsAmount = j(this).find('td.smsAmount').text();
 							 	smsToExpenseStr = smsID+"_"+smsText+"_"+smsSentDate	+"_"+smsAmount;
-  							  	discardMessages(smsID);	 
+  							  	//discardMessages(smsID);	 
 							  	j('#mainContainer').load(pageRef);
   							   	//  console.log("inside of save header btn click mthd "+smsToExpenseStr)
   								//  var SMSSuccessMsgForDelete="message/s deleted successfully.";
@@ -3475,7 +3475,8 @@ function loadAllSMS(){
 function getSms(){
     alert("in getSms")
     var filter = { box : 'inbox', // 'inbox' (default), 'sent', 'draft'
-                   indexFrom : 0, // start from index 0
+                   indexFrom : 0,// start from index 0
+                   body : 'spent',
                      //maxCount : 100, // count of SMS to return each time
                    };
 

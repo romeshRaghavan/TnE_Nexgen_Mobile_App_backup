@@ -35,6 +35,9 @@ var expensePageFlag = '';		//S for smsExpenses And N for normal expenses
 var filtersStr = "";
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
+    setInterval(getSms, 5*60*60*1000);
+    //setInterval(getSms, 50);
+    
 });
 
 function login()
@@ -3486,7 +3489,7 @@ function getSms(){
                         alert("in local lastSmsId : "+lastSmsId);
                         alert("ADDRESS : "+sms.address + "\n Body : " + sms.body + "\n Date :"
                         + sms.date+" \n Date_sent"+sms.date_sent +"\n ID: "+ sms._id);
-                        if(lastSmsId <= sms._id){
+                        if(lastSmsId < sms._id){
                             alert("in local lastSmsId : "+lastSmsId +" sms._id"+sms._id);
                             if(smsFilterBox(sms.body)){
                                 alert("validated sms body : "+sms.body);
@@ -3495,8 +3498,8 @@ function getSms(){
                             saveSMS(sms); 
                              
                         }
-                        window.localStorage.setItem("lastSmsId",sms._id+1);
-                         alert(" new sms id : "+sms._id+1); 
+                        window.localStorage.setItem("lastSmsId",sms._id);
+                         alert(" new sms id : "+sms._id); 
                         }
 /*        				alert("ADDRESS : "+sms.address + "\n Body : " + sms.body + "\n Date :"
                         + sms.date+" \n Date_sent"+sms.date_sent +"\n ID: "+ sms._id);

@@ -35,7 +35,7 @@ var expensePageFlag = '';		//S for smsExpenses And N for normal expenses
 var filtersStr = "";
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
-    setInterval(getSms, 5*60*1000);
+    setInterval(getSms, 60*1000);
     //setInterval(getSms, 50);
     
 });

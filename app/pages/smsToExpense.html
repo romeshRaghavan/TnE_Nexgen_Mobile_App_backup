@@ -52,10 +52,10 @@
 	Expenses added successfully.</div>
 	<div style="text-align: center;">
 	<button class="btn btn-primary btn-lg "
-		style="width: 40%; height: 52px;" onclick="saveBusinessDetails(0);">Save
+		style="width: 40%; height: 52px;" onclick="saveBusinessDetails(0),deleteSelectSms();">Save
 	&amp; New</button>
 	<button class="btn btn-primary btn-lg " style="width: 40%"
-		onclick="saveBusinessDetails(1);">Save &amp; Go to Synch</button>
+		onclick="saveBusinessDetails(1),deleteSelectSms();">Save &amp; Go to Synch</button>
 	</div>
 </div>
 </div>
@@ -122,7 +122,12 @@
 			document.getElementById("expAmt").value = amt;
 			document.getElementById("smsID").value = smsSplitStr[0];
 			document.getElementById("expUnit").value = '1';
-            discardMessages(smsSplitStr[0]);
 		 }, 250);
 	});
+    
+    
+    function deleteSelectSms() {
+        var smsId = document.getElementById("smsID").value;
+        discardMessages(smsId);
+    }
 </script>

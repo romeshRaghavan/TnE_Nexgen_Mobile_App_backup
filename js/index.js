@@ -3015,7 +3015,7 @@ function viewMessages(){
 	 saveIncomingSMSOnLocal(e4);*/
 
 	 //console.log("viewMessages  "+filtersStr)
-     loadAllSMS();
+    loadAllSMS()
     var headerBackBtn=defaultPagePath+'headerPageForSMSOperation.html';
     var pageRef=defaultPagePath+'fairMessageTable.html';
 	j(document).ready(function() {	
@@ -3450,9 +3450,7 @@ function setPerUnitDetailsForSmartExpense(transaction, results){
 }
 
 function loadAllSMS(){
-    alert("in loadAllSMS")
      document.addEventListener('onSMSArrive',function(e){
-		  	alert("in onDeviceReady onSMSArrive");
 			 	saveIncomingSMSOnLocal(e);
 			 },false);    
             getSms();

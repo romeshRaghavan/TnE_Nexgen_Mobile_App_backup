@@ -3491,7 +3491,10 @@ function getSms(){
                             saveSMS(sms); 
                              
                         }
-                        window.localStorage.setItem("lastSmsId",sms._id);
+                        var newLastSmsId = window.localStorage.getItem("lastSmsId");
+                        if(newLastSmsId <  sms._id){
+                          window.localStorage.setItem("lastSmsId",sms._id);
+                         }
                         }
 /*        				alert("ADDRESS : "+sms.address + "\n Body : " + sms.body + "\n Date :"
                         + sms.date+" \n Date_sent"+sms.date_sent +"\n ID: "+ sms._id);

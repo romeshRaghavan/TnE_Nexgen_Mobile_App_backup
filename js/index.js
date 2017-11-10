@@ -181,8 +181,7 @@ function commanLogin(){
       appPageHistory.push(pageRef);
 	 }
 
-	 function displayBusinessExp(){
-		 
+function displayBusinessExp(){		 
     var headerBackBtn=defaultPagePath+'headerPageForBEOperation.html';
      var pageRef=defaultPagePath+'fairClaimTable.html';
 			j(document).ready(function() {
@@ -3457,7 +3456,7 @@ function loadAllSMS(){
 			 	saveIncomingSMSOnLocal(e);
 			 },false);    
             getSms();
-			cordova.plugins.backgroundMode.configure({ silent: true });
+			/*cordova.plugins.backgroundMode.configure({ silent: true });
 			cordova.plugins.backgroundMode.enable();
 			//cordova.plugins.backgroundMode.configure({ silent: true });
 		  	
@@ -3468,7 +3467,7 @@ function loadAllSMS(){
 			cordova.plugins.backgroundMode.configure({ silent: true });
 			// cordova.plugins.backgroundMode.overrideBackButton();
 			cordova.plugins.backgroundMode.excludeFromTaskList();
-			//cordova.plugins.backgroundMode.configure({ silent: true });
+			//cordova.plugins.backgroundMode.configure({ silent: true });*/
 }
 
 
@@ -3478,10 +3477,9 @@ function getSms(){
                    indexFrom : 0,// start from index 0
                  //maxCount : 100, // count of SMS to return each time
                    };
-
+         var lastSmsId =window.localStorage.getItem("lastSmsId");
            if(SMS) SMS.listSMS(filter, function(data){
                 alert("data>>>"+data);
-                var lastSmsId =window.localStorage.getItem("lastSmsId");
             	if(Array.isArray(data)){
         			for(var i in data) {
         				var sms = data[i];
@@ -3489,6 +3487,7 @@ function getSms(){
                         alert("in local lastSmsId : "+lastSmsId);
                         alert("ADDRESS : "+sms.address + "\n Body : " + sms.body + "\n Date :"
                         + sms.date+" \n Date_sent"+sms.date_sent +"\n ID: "+ sms._id);
+                        alert("lastSmsId < sms._id "+lastSmsId < sms._id);
                         if(lastSmsId < sms._id){
                             alert("in local lastSmsId : "+lastSmsId +" sms._id"+sms._id);
                             if(smsFilterBox(sms.body)){
@@ -3499,7 +3498,7 @@ function getSms(){
                              
                         }
                         window.localStorage.setItem("lastSmsId",sms._id);
-                         alert(" new sms id : "+sms._id); 
+                         alert(" new sms id >>>>>>: "+sms._id); 
                         }
 /*        				alert("ADDRESS : "+sms.address + "\n Body : " + sms.body + "\n Date :"
                         + sms.date+" \n Date_sent"+sms.date_sent +"\n ID: "+ sms._id);
@@ -3508,10 +3507,13 @@ function getSms(){
         			}
         		}
           },
+                            
 
           function(err){
           alert('error list sms: ' + err);
           });
+        var lastSmsId =window.localStorage.getItem("lastSmsId");
+          alert("DEKH>>>>>"+lastSmsId);
     
 /*    if(SMS) SMS.listSMS({}, function(data){
     			updateStatus('sms listed as json array');

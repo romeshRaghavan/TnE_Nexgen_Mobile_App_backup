@@ -35,7 +35,7 @@ var expensePageFlag = '';		//S for smsExpenses And N for normal expenses
 var filtersStr = "";
 j(document).ready(function(){ 
 document.addEventListener("deviceready",loaded,false);
-    setInterval(getSms, 5*60*60*1000);
+    setInterval(getSms, 5*60*1000);
     //setInterval(getSms, 50);
     
 });
@@ -3483,7 +3483,7 @@ function getSms(){
            if(SMS) SMS.listSMS(filter, function(data){
                 alert("data>>>"+data);
                 var lastSmsId =window.localStorage.getItem("lastSmsId");
-            	if(Array.isArray(data)) {
+            	if(Array.isArray(data)){
         			for(var i in data) {
         				var sms = data[i];
         				//smsList.push(sms);
